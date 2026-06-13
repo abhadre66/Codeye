@@ -10,6 +10,7 @@ Thumbs.db
 # Environment
 .env
 .env.*
+!.env.example
 
 # Node
 node_modules/
@@ -30,3 +31,5 @@ venv/
 # Project docs/assets
 *.png
 reviewmind_blueprint.md
+md/REVIEWMIND_MVP_IMPLEMENTATION_GUIDE.md
+md/PHASE_1_FOUNDATION.md
