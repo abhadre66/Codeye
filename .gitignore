@@ -34,6 +34,11 @@ venv/
 reviewmind_blueprint.md
 md/
 
+# PDF generation scripts (local only — run manually to regenerate docs)
+scripts/generate_pdf.py
+scripts/generate_phases_pdf.py
+scripts/gen_review_flowchart.py
+
 # Test / coverage artifacts
 .coverage
 .coverage.*
