@@ -31,5 +31,13 @@ venv/
 # Project docs/assets
 *.png
 reviewmind_blueprint.md
-md/REVIEWMIND_MVP_IMPLEMENTATION_GUIDE.md
-md/PHASE_1_FOUNDATION.md
+md/
+
+# Test / coverage artifacts
+.coverage
+.coverage.*
+.pytest_cache/
+htmlcov/
+
+# Claude Code local files
+.claude/

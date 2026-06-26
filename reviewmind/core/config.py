@@ -10,5 +10,11 @@ class Settings(BaseSettings):
     database_url: str
     redis_url: str
 
+    # Phase 2
+    github_token: str = ""
+    github_api_version: str = "2022-11-28"
+    github_rate_limit_warning: int = 100  # warn when remaining drops below this
+    github_request_timeout: float = 10.0
+
 
 settings = Settings()
