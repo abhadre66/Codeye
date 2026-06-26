@@ -93,7 +93,8 @@ def test_sec003_negative():
 
 def test_sec003_false_positive():
     """Known FP: package not in vuln_snapshot is not flagged."""
-    chunk = _chunk("requirements.txt", ["httpx==0.27.0"])
+    # bcrypt has no entries in OSV.dev — confirmed clean in current snapshot
+    chunk = _chunk("requirements.txt", ["bcrypt==4.1.2"])
     assert sec003(chunk) == []
 
 
