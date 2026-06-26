@@ -30,6 +30,7 @@ venv/
 
 # Project docs/assets
 *.png
+*.pdf
 reviewmind_blueprint.md
 md/
 
