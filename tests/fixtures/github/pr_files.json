@@ -1,0 +1,16 @@
+[
+  {
+    "filename": "reviewmind/api/auth.py",
+    "status": "added",
+    "additions": 85,
+    "deletions": 0,
+    "patch": "@@ -0,0 +1,85 @@\n+from fastapi import Depends, HTTPException\n+import jwt\n+\n+def require_auth(token: str = Depends(oauth2_scheme)):\n+    ..."
+  },
+  {
+    "filename": "reviewmind/api/routes.py",
+    "status": "modified",
+    "additions": 35,
+    "deletions": 30,
+    "patch": "@@ -1,5 +1,10 @@\n-from fastapi import APIRouter\n+from fastapi import APIRouter, Depends\n+from reviewmind.api.auth import require_auth"
+  }
+]

@@ -1,0 +1,11 @@
+diff --git a/reviewmind.yaml b/reviewmind.yaml
+--- a/reviewmind.yaml
++++ b/reviewmind.yaml
+@@ -1,5 +1,6 @@
+ reviewmind:
+   rules:
+     style:
+-      max_function_length: 50
++      max_function_length: 40
++      require_docstrings: true
+     security:

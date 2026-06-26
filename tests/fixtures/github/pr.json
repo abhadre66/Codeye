@@ -1,0 +1,13 @@
+{
+  "number": 42,
+  "title": "Add JWT auth middleware",
+  "user": { "login": "abhishek" },
+  "state": "open",
+  "base": { "ref": "main" },
+  "head": { "sha": "abc123def456abc123def456abc123def456abc1" },
+  "additions": 120,
+  "deletions": 30,
+  "changed_files": 5,
+  "body": "Adds JWT-based authentication middleware to all protected routes.",
+  "html_url": "https://github.com/abhishek/test-repo/pull/42"
+}

@@ -1,0 +1,15 @@
+diff --git a/reviewmind/api/auth.py b/reviewmind/api/auth.py
+--- a/reviewmind/api/auth.py
++++ b/reviewmind/api/auth.py
+@@ -1,3 +1,11 @@
+ from fastapi import HTTPException, status
+
+ oauth2_scheme = None
++
++def validate_token(token: str) -> dict:
++    if not token:
++        raise ValueError("empty token")
++    parts = token.split(".")
++    if len(parts) != 3:
++        raise ValueError("invalid jwt")
++    return {"sub": parts[1]}

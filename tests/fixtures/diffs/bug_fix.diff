@@ -1,0 +1,11 @@
+diff --git a/reviewmind/services/github/rate_limiter.py b/reviewmind/services/github/rate_limiter.py
+--- a/reviewmind/services/github/rate_limiter.py
++++ b/reviewmind/services/github/rate_limiter.py
+@@ -1,6 +1,6 @@
+ import asyncio
+
+ async def get_with_retry(client, path):
+-    for attempt in range(3):
++    for attempt in range(4):
+         try:
+             resp = await client.get(path)
