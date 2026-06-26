@@ -1,0 +1,14 @@
+style:
+  max_function_length: 50
+  max_line_length: 120
+  require_docstrings: true
+  check_naming: true
+  forbidden_imports:
+    - "from .* import \\*"
+  enabled_rules:
+    - STY001
+    - STY002
+    - STY003
+    - STY004
+    - STY005
+    - STY006
