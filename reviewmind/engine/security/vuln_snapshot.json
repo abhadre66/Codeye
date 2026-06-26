@@ -1,0 +1,17 @@
+{
+  "django": "Multiple known CVEs including SQL injection and XSS in older versions",
+  "flask": "Older versions have known open redirect and session vulnerabilities",
+  "requests": "Versions <2.20.0 vulnerable to header injection (CVE-2018-18074)",
+  "pyyaml": "Versions <6.0 allow arbitrary code execution via yaml.load (CVE-2017-18342)",
+  "pillow": "Multiple CVEs in older versions including buffer overflow and DoS",
+  "cryptography": "Versions <41.0.0 have known timing side-channel vulnerabilities",
+  "urllib3": "Versions <1.26.5 vulnerable to ReDoS (CVE-2021-33503)",
+  "paramiko": "Versions <2.10.1 have authentication bypass vulnerability",
+  "jinja2": "Versions <2.11.3 vulnerable to sandbox escape (CVE-2020-28493)",
+  "werkzeug": "Versions <2.3.8 have open redirect vulnerability (CVE-2023-46136)",
+  "sqlalchemy": "Versions <1.4.0 have SQL injection risk with certain filter patterns",
+  "lxml": "Versions <4.9.1 vulnerable to XXE injection",
+  "aiohttp": "Versions <3.8.5 have open redirect and path traversal vulnerabilities",
+  "twisted": "Versions <22.10.0 have HTTP request smuggling vulnerability",
+  "numpy": "Versions <1.22.0 have buffer overflow in certain operations"
+}
