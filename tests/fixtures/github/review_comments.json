@@ -1,0 +1,26 @@
+[
+  {
+    "id": 2001,
+    "path": "src/auth.py",
+    "line": 42,
+    "body": "This password is hardcoded — move to env var.",
+    "user": {"login": "alice"},
+    "created_at": "2024-01-15T12:05:00Z"
+  },
+  {
+    "id": 2002,
+    "path": "src/db.py",
+    "line": 87,
+    "body": "Use a parameterized query here to prevent SQL injection.",
+    "user": {"login": "alice"},
+    "created_at": "2024-01-15T12:10:00Z"
+  },
+  {
+    "id": 2003,
+    "path": "src/auth.py",
+    "line": null,
+    "body": "General comment about the auth module structure.",
+    "user": {"login": "bob"},
+    "created_at": "2024-01-16T09:25:00Z"
+  }
+]

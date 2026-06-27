@@ -1,0 +1,41 @@
+[
+  {
+    "sha": "abc123",
+    "commit": {
+      "message": "Fix auth token validation\n\nDetailed body here.",
+      "author": {
+        "name": "Sarah Connor",
+        "date": "2024-01-15T10:00:00Z"
+      }
+    },
+    "author": {
+      "login": "sarah-c"
+    }
+  },
+  {
+    "sha": "def456",
+    "commit": {
+      "message": "Add rate limiting to auth endpoints",
+      "author": {
+        "name": "John Miles",
+        "date": "2024-01-14T09:00:00Z"
+      }
+    },
+    "author": {
+      "login": "jmiles"
+    }
+  },
+  {
+    "sha": "ghi789",
+    "commit": {
+      "message": "Refactor auth module",
+      "author": {
+        "name": "Sarah Connor",
+        "date": "2024-01-13T08:00:00Z"
+      }
+    },
+    "author": {
+      "login": "sarah-c"
+    }
+  }
+]

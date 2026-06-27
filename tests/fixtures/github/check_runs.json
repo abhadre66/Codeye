@@ -1,0 +1,19 @@
+{
+  "total_count": 2,
+  "check_runs": [
+    {
+      "id": 3001,
+      "name": "ci/pytest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/acme/widgets/runs/3001"
+    },
+    {
+      "id": 3002,
+      "name": "ci/lint",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/acme/widgets/runs/3002"
+    }
+  ]
+}

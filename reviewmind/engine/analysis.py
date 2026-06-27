@@ -27,9 +27,14 @@ async def analyze_code(filename: str, content: str) -> list[SemanticChunk]:
     """Pipeline for pasted or uploaded code (no real diff exists).
 
     Treats the entire file as newly added via a synthetic diff.
+    Supplies content as fetch_content so Python AST chunking runs properly.
     """
     file_diffs = synthetic_diff(filename, content)
-    chunks     = await chunk_file_diffs(file_diffs, fetch_content=None)
+
+    async def _fetch(fname: str) -> str:
+        return content
+
+    chunks = await chunk_file_diffs(file_diffs, fetch_content=_fetch)
     return _enrich(chunks)
 
 
