@@ -26,7 +26,7 @@ from reviewmind.services import fix_suggester as _fix_suggester
 from reviewmind.services import snippet_compare as _snippet_compare
 
 # ── Lazy PR services ──────────────────────────────────────────────────────────
-from reviewmind.mcp_server import _get_services, _to_json
+from reviewmind.mcp_server import _to_json
 
 
 def _make_services(token: str):
@@ -333,18 +333,24 @@ TOOLS_SCHEMA = [
 ]
 
 
-async def _run_tool(name: str, args: dict, github_token: str | None = None) -> str:
-    """Execute a tool by name and return a JSON string result.
+# Tools that call the GitHub API — every one of these must run as the
+# calling user via their own linked token. No shared server-wide fallback,
+# ever: if the caller has no token, the tool refuses instead of silently
+# acting as someone else.
+_GITHUB_TOOLS = {
+    "get_pr_summary", "analyze_diff", "check_security_issues", "check_style_violations",
+    "get_pr_context", "suggest_reviewers", "get_review_history", "post_review",
+}
 
-    When github_token is set (caller is signed in with a linked GitHub
-    account), GitHub-backed tools run as that user via _make_services —
-    never the shared server-wide token — so every user's actions and rate
-    limit are their own.
-    """
-    if github_token:
+
+async def _run_tool(name: str, args: dict, github_token: str | None = None) -> str:
+    """Execute a tool by name and return a JSON string result."""
+    if name in _GITHUB_TOOLS:
+        if not github_token:
+            return json.dumps({
+                "error": "This needs your own GitHub account — sign in with GitHub to continue.",
+            })
         analysis_svc, context_svc, review_svc = _make_services(github_token)
-    else:
-        analysis_svc, context_svc, review_svc = _get_services()
 
     match name:
         case "get_pr_summary":
@@ -362,7 +368,9 @@ async def _run_tool(name: str, args: dict, github_token: str | None = None) -> s
         case "get_review_history":
             return _to_json(await review_svc.get_review_history(args["owner"], args["repo"], args["pr_number"]))
         case "generate_review_comment":
-            return json.dumps(review_svc.generate_review_comment(args["finding"], args.get("comment_style", "concise")))
+            # Pure formatting over a finding dict — no GitHub call, no token needed.
+            from reviewmind.services.review_service import ReviewService
+            return json.dumps(ReviewService(None).generate_review_comment(args["finding"], args.get("comment_style", "concise")))
         case "analyze_paste":
             return _to_json(await _code_analysis.analyze_paste(args["code"], args.get("filename", "snippet.py")))
         case "analyze_upload":
