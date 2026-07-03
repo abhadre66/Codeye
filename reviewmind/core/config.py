@@ -30,7 +30,7 @@ class Settings(BaseSettings):
 
     # Phase 7
     anthropic_api_key: str = ""
-    anthropic_model: str = "claude-opus-4-8"
+    anthropic_model: str = "claude-sonnet-5"
     jwt_secret: str = "change-me-in-production"
     jwt_expiry_hours: int = 24
     admin_username: str = "admin"
