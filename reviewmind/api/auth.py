@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from reviewmind.api.supabase_client import get_supabase
+from reviewmind.core.crypto import decrypt_token
 
 _bearer = HTTPBearer(auto_error=False)
 
@@ -36,7 +37,7 @@ async def get_github_token(
         result = supabase.table("profiles").select("github_token").eq("id", user.id).single().execute()
         token = result.data.get("github_token") if result.data else None
         if token:
-            return token
+            return decrypt_token(token)
     except Exception:
         pass
 
@@ -52,3 +53,26 @@ async def get_github_token(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="GitHub token not found — please sign out and sign in again with GitHub",
     )
+
+
+async def get_optional_github_token(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
+) -> str | None:
+    """Like get_github_token, but returns None instead of raising.
+
+    Used by endpoints (e.g. /chat) that should work for anonymous users on
+    GitHub-free tools, but must use the caller's own GitHub token — never a
+    shared fallback — when the caller is signed in.
+    """
+    if not credentials:
+        return None
+    try:
+        supabase = get_supabase()
+        response = supabase.auth.get_user(credentials.credentials)
+        if not response.user:
+            return None
+        result = supabase.table("profiles").select("github_token").eq("id", response.user.id).single().execute()
+        token = result.data.get("github_token") if result.data else None
+        return decrypt_token(token) if token else None
+    except Exception:
+        return None

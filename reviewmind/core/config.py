@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     # Phase 8
     supabase_url: str = ""
     supabase_service_role_key: str = ""
+    token_encryption_key: str = ""
 
 
 settings = Settings()

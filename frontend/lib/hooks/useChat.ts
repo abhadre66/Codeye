@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
+import { supabase } from "@/lib/supabase";
 
 export interface ChatMessage {
   id: string;
@@ -44,9 +45,15 @@ export function useChat() {
     abortRef.current = new AbortController();
 
     try {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(req),
         signal: abortRef.current.signal,
       });

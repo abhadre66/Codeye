@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from reviewmind.api.auth import require_auth, get_github_token
+from reviewmind.api.auth import require_auth, get_github_token, get_optional_github_token
 from reviewmind.core.cache import redis_client
 from reviewmind.core.config import settings
 from reviewmind.core.logging import get_logger
@@ -104,10 +104,11 @@ async def save_github_token(
     user: dict = Depends(require_auth),
 ) -> dict:
     from reviewmind.api.supabase_client import get_supabase
+    from reviewmind.core.crypto import encrypt_token
     supabase = get_supabase()
     supabase.table("profiles").upsert({
         "id": user.id,
-        "github_token": req.github_token,
+        "github_token": encrypt_token(req.github_token),
         "github_username": user.user_metadata.get("user_name", ""),
     }).execute()
     return {"ok": True}
@@ -332,9 +333,18 @@ TOOLS_SCHEMA = [
 ]
 
 
-async def _run_tool(name: str, args: dict) -> str:
-    """Execute a tool by name and return a JSON string result."""
-    analysis_svc, context_svc, review_svc = _get_services()
+async def _run_tool(name: str, args: dict, github_token: str | None = None) -> str:
+    """Execute a tool by name and return a JSON string result.
+
+    When github_token is set (caller is signed in with a linked GitHub
+    account), GitHub-backed tools run as that user via _make_services —
+    never the shared server-wide token — so every user's actions and rate
+    limit are their own.
+    """
+    if github_token:
+        analysis_svc, context_svc, review_svc = _make_services(github_token)
+    else:
+        analysis_svc, context_svc, review_svc = _get_services()
 
     match name:
         case "get_pr_summary":
@@ -389,7 +399,7 @@ def _sse(event: str, data: dict) -> str:
     return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
 
-async def _chat_stream(req: ChatRequest):
+async def _chat_stream(req: ChatRequest, github_token: str | None = None):
     import anthropic
 
     if not settings.anthropic_api_key:
@@ -452,7 +462,7 @@ async def _chat_stream(req: ChatRequest):
             for tc in tool_uses:
                 try:
                     args = json.loads(tc.get("input_str") or "{}")
-                    result = await _run_tool(tc["name"], args)
+                    result = await _run_tool(tc["name"], args, github_token)
                     tool_results.append({
                         "type": "tool_result",
                         "tool_use_id": tc["id"],
@@ -479,9 +489,12 @@ async def _chat_stream(req: ChatRequest):
 
 
 @router.post("/chat")
-async def chat(req: ChatRequest) -> StreamingResponse:
+async def chat(
+    req: ChatRequest,
+    github_token: str | None = Depends(get_optional_github_token),
+) -> StreamingResponse:
     return StreamingResponse(
-        _chat_stream(req),
+        _chat_stream(req, github_token),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
