@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,6 +10,17 @@ class Settings(BaseSettings):
 
     database_url: str
     redis_url: str
+
+    @field_validator("database_url")
+    @classmethod
+    def _use_asyncpg_driver(cls, v: str) -> str:
+        # Managed Postgres providers (e.g. Railway) inject postgres:// or
+        # postgresql:// — normalize to the asyncpg driver scheme we need.
+        if v.startswith("postgres://"):
+            return "postgresql+asyncpg://" + v[len("postgres://"):]
+        if v.startswith("postgresql://"):
+            return "postgresql+asyncpg://" + v[len("postgresql://"):]
+        return v
 
     # Phase 2
     github_token: str = ""
