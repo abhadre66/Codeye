@@ -46,6 +46,7 @@ class PRSummary:
     author: str
     state: str          # open | closed | merged
     base_branch: str
+    base_sha: str
     head_sha: str
     additions: int
     deletions: int
@@ -406,6 +407,7 @@ def _dict_to_pr_summary(data: dict, owner: str, repo: str) -> PRSummary:
         author=data["user"]["login"],
         state=data["state"],
         base_branch=data["base"]["ref"],
+        base_sha=data["base"]["sha"],
         head_sha=data["head"]["sha"],
         additions=data.get("additions", 0),
         deletions=data.get("deletions", 0),

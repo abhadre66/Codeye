@@ -15,6 +15,8 @@ class StyleFinding:
     line:      int | None
     message:   str
     snippet:   str
+    fix_description: str | None = None
+    fix_example:      str | None = None
 
 
 @dataclass
