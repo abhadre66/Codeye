@@ -1,9 +1,7 @@
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 
 from reviewmind.api.routes import router
 from reviewmind.core.logging import configure_logging, get_logger
@@ -30,6 +28,3 @@ app.add_middleware(
 )
 
 app.include_router(router)
-
-STATIC_DIR = Path(__file__).parent / "static"
-app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
