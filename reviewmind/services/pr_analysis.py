@@ -18,6 +18,7 @@ from reviewmind.engine.security import engine as security_engine
 from reviewmind.engine.security.models import SecurityFinding
 from reviewmind.engine.style import engine as style_engine
 from reviewmind.engine.style.models import StyleConfig, StyleFinding, load_config
+from reviewmind.services.fix_suggester import fix_for_security_finding, fix_for_style_finding
 from reviewmind.services.github.client import NotFoundError
 from reviewmind.services.github.repository import GitHubRepository, PRSummary, TTL_DIFF_OPEN
 
@@ -31,6 +32,9 @@ class PRAnalysisResult:
     security_findings: list[SecurityFinding]
     style_findings: list[StyleFinding]
     chunks_by_classification: dict[str, list[SemanticChunk]] = field(default_factory=dict)
+    files_changed: int = 0
+    additions: int = 0
+    deletions: int = 0
 
 
 class PRAnalysisService:
@@ -97,6 +101,15 @@ class PRAnalysisService:
         config = await self._load_style_config(owner, repo, pr_number)
         style_findings = style_engine.scan(chunks, config)
 
+        for finding in security_findings:
+            suggestion = fix_for_security_finding(finding)
+            finding.fix_description = suggestion.fix_description
+            finding.fix_example = suggestion.fix_example
+        for finding in style_findings:
+            suggestion = fix_for_style_finding(finding)
+            finding.fix_description = suggestion.fix_description
+            finding.fix_example = suggestion.fix_example
+
         by_class: dict[str, list[SemanticChunk]] = {}
         for chunk in chunks:
             by_class.setdefault(chunk.classification, []).append(chunk)
@@ -107,6 +120,9 @@ class PRAnalysisService:
             security_findings=security_findings,
             style_findings=style_findings,
             chunks_by_classification=by_class,
+            files_changed=pr.changed_files,
+            additions=pr.additions,
+            deletions=pr.deletions,
         )
 
 

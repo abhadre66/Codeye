@@ -28,6 +28,9 @@ venv/
 # Logs
 *.log
 
+# Sample files (local test fixtures only)
+samples/
+
 # Project docs/assets
 *.png
 *.pdf

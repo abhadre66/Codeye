@@ -13,3 +13,5 @@ class SecurityFinding:
     line:      int | None     # new-file line number; None when unknown
     message:   str
     snippet:   str            # the offending line text
+    fix_description: str | None = None
+    fix_example:      str | None = None

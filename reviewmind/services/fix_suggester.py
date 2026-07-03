@@ -82,6 +82,16 @@ async def suggest_fixes(
     )
 
 
+def fix_for_security_finding(finding: SecurityFinding) -> FixSuggestion:
+    """Public wrapper so callers outside this module can enrich a single finding."""
+    return _fix_for_security(finding, code="")
+
+
+def fix_for_style_finding(finding: StyleFinding) -> FixSuggestion:
+    """Public wrapper so callers outside this module can enrich a single finding."""
+    return _fix_for_style(finding, code="")
+
+
 # ── Security fix templates ────────────────────────────────────────────────────
 
 def _fix_for_security(finding: SecurityFinding, code: str) -> FixSuggestion:

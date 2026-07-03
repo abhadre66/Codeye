@@ -89,11 +89,13 @@ class GitHubClient:
         )
 
     def _default_headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"Bearer {self._token}",
+        headers: dict[str, str] = {
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": settings.github_api_version,
         }
+        if self._token:
+            headers["Authorization"] = f"Bearer {self._token}"
+        return headers
 
     async def close(self) -> None:
         await self._http.aclose()
