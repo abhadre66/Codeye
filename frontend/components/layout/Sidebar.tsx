@@ -10,6 +10,7 @@ import {
   GitBranch,
   LogOut,
   Loader2,
+  Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/lib/hooks/useUser";
@@ -21,6 +22,8 @@ const nav = [
   { href: "/analyze", icon: Code2,          label: "Analyze Code" },
   { label: "Pull Request", items: [] },
   { href: "/pr",      icon: GitPullRequest, label: "PR Review" },
+  { label: "Memory", items: [] },
+  { href: "/history", icon: Clock,          label: "History" },
 ];
 
 interface Props {

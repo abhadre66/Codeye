@@ -83,7 +83,7 @@ export default function AnalyzePage() {
       setCode(content);
       setLoading(true);
       try {
-        const resp = await suggestFixes(content, file.name);
+        const resp = await suggestFixes(content, file.name, "upload");
         const result = (resp as { result?: FixReport }).result ?? {};
         const raw = [
           ...((result.analysis?.security_findings ?? []) as RawFinding[]),
@@ -120,7 +120,7 @@ export default function AnalyzePage() {
     if (!code.trim()) return;
     setLoading(true);
     try {
-      const resp = await suggestFixes(code, filename);
+      const resp = await suggestFixes(code, filename, "paste");
       const result = (resp as { result?: FixReport }).result ?? {};
       const raw = [
         ...((result.analysis?.security_findings ?? []) as RawFinding[]),

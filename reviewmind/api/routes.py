@@ -7,13 +7,14 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from reviewmind.api.auth import require_auth, get_github_token, get_optional_github_token
 from reviewmind.core.cache import redis_client
 from reviewmind.core.config import settings
 from reviewmind.core.logging import get_logger
+from reviewmind.db.models import AnalysisHistory
 from reviewmind.db.session import get_session
 
 logger = get_logger(__name__)
@@ -50,6 +51,31 @@ def _asdict(obj: Any) -> Any:
     return obj
 
 
+async def _record_history(
+    session: AsyncSession,
+    user_id: str,
+    source: str,
+    label: str,
+    security_count: int,
+    style_count: int,
+    payload: dict,
+) -> None:
+    """Best-effort: never let history logging break the actual analysis response."""
+    try:
+        session.add(AnalysisHistory(
+            user_id=user_id,
+            source=source,
+            label=label,
+            findings_count=security_count + style_count,
+            security_count=security_count,
+            style_count=style_count,
+            payload=json.dumps(payload),
+        ))
+        await session.commit()
+    except Exception as exc:
+        logger.error("history_record_failed", user_id=user_id, source=source, error=str(exc))
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Request models
 # ─────────────────────────────────────────────────────────────────────────────
@@ -69,6 +95,7 @@ class CompareRequest(BaseModel):
 class FixRequest(BaseModel):
     code: str
     filename: str = "snippet.py"
+    source: str = "paste"  # "paste" | "upload" — which Analyze tab this came from
 
 class PRRequest(BaseModel):
     owner: str
@@ -118,6 +145,59 @@ async def save_github_token(
         logger.error("github_token_save_failed", user_id=user.id, error=str(exc))
         raise HTTPException(status_code=500, detail=f"Failed to save GitHub token: {exc}")
 
+# ─────────────────────────────────────────────────────────────────────────────
+# History ("memory" of past analyses — paste, upload, and PR reviews)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.get("/history")
+async def list_history(
+    user: dict = Depends(require_auth),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    stmt = (
+        select(AnalysisHistory)
+        .where(AnalysisHistory.user_id == user.id)
+        .order_by(AnalysisHistory.created_at.desc())
+        .limit(100)
+    )
+    rows = (await session.execute(stmt)).scalars().all()
+    return {"ok": True, "history": [
+        {
+            "id": r.id,
+            "source": r.source,
+            "label": r.label,
+            "findings_count": r.findings_count,
+            "security_count": r.security_count,
+            "style_count": r.style_count,
+            "created_at": r.created_at.isoformat(),
+        }
+        for r in rows
+    ]}
+
+
+@router.get("/history/{history_id}")
+async def get_history_entry(
+    history_id: int,
+    user: dict = Depends(require_auth),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    stmt = select(AnalysisHistory).where(
+        AnalysisHistory.id == history_id,
+        AnalysisHistory.user_id == user.id,
+    )
+    row = (await session.execute(stmt)).scalar_one_or_none()
+    if row is None:
+        raise HTTPException(status_code=404, detail="History entry not found")
+    return {
+        "ok": True,
+        "id": row.id,
+        "source": row.source,
+        "label": row.label,
+        "created_at": row.created_at.isoformat(),
+        "payload": json.loads(row.payload),
+    }
+
+
 @router.get("/health")
 async def health(session: AsyncSession = Depends(get_session)) -> dict:
     await session.execute(text("SELECT 1"))
@@ -148,8 +228,30 @@ async def compare(req: CompareRequest) -> dict:
 
 
 @router.post("/fix")
-async def fix(req: FixRequest) -> dict:
+async def fix(
+    req: FixRequest,
+    user: dict = Depends(require_auth),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
     result = await _fix_suggester.suggest_fixes(req.code, req.filename)
+    security_count = len(result.analysis.security_findings)
+    style_count = len(result.analysis.style_findings)
+    source = req.source if req.source in ("paste", "upload") else "paste"
+    await _record_history(
+        session, user.id, source, req.filename,
+        security_count, style_count,
+        {
+            "code": req.code,
+            "filename": req.filename,
+            "result": {
+                "analysis": {
+                    "security_findings": _asdict(result.analysis.security_findings),
+                    "style_findings": _asdict(result.analysis.style_findings),
+                },
+                "suggestions": _asdict(result.suggestions),
+            },
+        },
+    )
     return {"ok": True, "result": _asdict(result)}
 
 
@@ -213,9 +315,25 @@ async def pr_diff(
 async def pr_analyze(
     req: PRRequest,
     github_token: str = Depends(get_github_token),
+    user: dict = Depends(require_auth),
+    session: AsyncSession = Depends(get_session),
 ) -> dict:
     analysis_svc, _, _ = _make_services(github_token)
     result = await analysis_svc.full_analysis(req.owner, req.repo, req.pr_number)
+    await _record_history(
+        session, user.id, "pr", f"{req.owner}/{req.repo}#{req.pr_number}",
+        len(result.security_findings), len(result.style_findings),
+        {
+            "owner": req.owner, "repo": req.repo, "pr_number": req.pr_number,
+            "result": {
+                "security_findings": _asdict(result.security_findings),
+                "style_findings": _asdict(result.style_findings),
+                "files_changed": result.files_changed,
+                "additions": result.additions,
+                "deletions": result.deletions,
+            },
+        },
+    )
     return {"ok": True, "result": _asdict(result)}
 
 

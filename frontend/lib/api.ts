@@ -42,8 +42,8 @@ export const analyzeUpload = (files: { name: string; content: string }[]) =>
 export const compare = (before: string, after: string, filename = "snippet.py") =>
   post<{ ok: boolean; result: unknown }>("/compare", { before, after, filename });
 
-export const suggestFixes = (code: string, filename = "snippet.py") =>
-  post<{ ok: boolean; result: unknown }>("/fix", { code, filename });
+export const suggestFixes = (code: string, filename = "snippet.py", source: "paste" | "upload" = "paste") =>
+  post<{ ok: boolean; result: unknown }>("/fix", { code, filename, source }, true);
 
 // ── PR ────────────────────────────────────────────────────────────────────────
 export const analyzePR = (owner: string, repo: string, pr_number: number) =>
@@ -96,3 +96,29 @@ export const postReview = (
   comments: unknown[] = [],
 ) =>
   post<{ ok: boolean; result: unknown }>("/pr/review", { owner, repo, pr_number, body, event, confirmed, comments }, true);
+
+// ── History ───────────────────────────────────────────────────────────────────
+export interface HistoryEntry {
+  id: number;
+  source: "paste" | "upload" | "pr";
+  label: string;
+  findings_count: number;
+  security_count: number;
+  style_count: number;
+  created_at: string;
+}
+
+export const getHistory = async () => {
+  const token = await getToken();
+  return req<{ ok: boolean; history: HistoryEntry[] }>("/history", {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+};
+
+export const getHistoryEntry = async (id: number) => {
+  const token = await getToken();
+  return req<{ ok: boolean; id: number; source: string; label: string; created_at: string; payload: Record<string, unknown> }>(
+    `/history/${id}`,
+    { headers: token ? { Authorization: `Bearer ${token}` } : {} },
+  );
+};

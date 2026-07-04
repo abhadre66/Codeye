@@ -128,3 +128,20 @@ class Review(Base):
     posted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     pull_request: Mapped["PullRequest"] = relationship(back_populates="reviews")
+
+
+# ── Analysis History (per-user "memory" of every analysis run) ───────────────
+
+class AnalysisHistory(Base):
+    __tablename__ = "analysis_history"
+    __table_args__ = (Index("ix_history_user_created", "user_id", "created_at"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[str] = mapped_column(String(64), nullable=False)  # Supabase auth user id
+    source: Mapped[str] = mapped_column(String(20), nullable=False)   # paste|upload|pr
+    label: Mapped[str] = mapped_column(Text, nullable=False)          # filename, or "owner/repo#123"
+    findings_count: Mapped[int] = mapped_column(Integer, default=0)
+    security_count: Mapped[int] = mapped_column(Integer, default=0)
+    style_count: Mapped[int] = mapped_column(Integer, default=0)
+    payload: Mapped[str] = mapped_column(Text, nullable=False)        # JSON: findings + code, for reopening
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
