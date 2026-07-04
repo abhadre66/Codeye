@@ -5,9 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   MessageSquare,
   Code2,
-  GitCompare,
   GitPullRequest,
-  Wrench,
   Zap,
   GitBranch,
   LogOut,
@@ -21,8 +19,6 @@ const nav = [
   { href: "/chat",    icon: Zap,            label: "Chat" },
   { label: "Analysis", items: [] },
   { href: "/analyze", icon: Code2,          label: "Analyze Code" },
-  { href: "/compare", icon: GitCompare,     label: "Compare" },
-  { href: "/fix",     icon: Wrench,         label: "Fix Suggestions" },
   { label: "Pull Request", items: [] },
   { href: "/pr",      icon: GitPullRequest, label: "PR Review" },
 ];

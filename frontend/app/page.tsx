@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { Zap, Code2, GitCompare, GitPullRequest, Wrench, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
+import { Zap, Code2, GitPullRequest, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
 
 const features = [
   { href: "/chat",    icon: Zap,            title: "AI Chat",          desc: "Stream a full code review with Claude calling 14 specialized tools automatically.", color: "text-[#2563eb]", border: "border-blue-900/50", bg: "bg-blue-950/20" },
-  { href: "/analyze", icon: Code2,          title: "Analyze Code",     desc: "Paste or upload code. Get security findings and style violations in seconds.", color: "text-[#f97316]", border: "border-orange-900/50", bg: "bg-orange-950/20" },
-  { href: "/compare", icon: GitCompare,     title: "Before / After",   desc: "Compare two versions. See what issues were introduced or fixed, and the complexity delta.", color: "text-[#22c55e]", border: "border-green-900/50", bg: "bg-green-950/20" },
-  { href: "/fix",     icon: Wrench,         title: "Fix Suggestions",  desc: "Get concrete, copy-paste fix examples for every security and style violation found.", color: "text-[#eab308]", border: "border-yellow-900/50", bg: "bg-yellow-950/20" },
+  { href: "/analyze", icon: Code2,          title: "Analyze Code",     desc: "Paste or upload code. Get plain-English findings, fix suggestions, and a before/after diff — all in one flow.", color: "text-[#f97316]", border: "border-orange-900/50", bg: "bg-orange-950/20" },
   { href: "/pr",      icon: GitPullRequest, title: "PR Review",        desc: "Full GitHub PR analysis: diff, security, style, reviewer suggestions, and one-click posting.", color: "text-[#a855f7]", border: "border-purple-900/50", bg: "bg-purple-950/20" },
 ];
 

@@ -53,7 +53,7 @@ function applyFixes(original: string, findings: Finding[]): string {
   return result;
 }
 
-const STEPS = ["Paste Code", "Review Findings", "See Diff"];
+const STEPS = ["Add Code", "Review Findings", "See Diff"];
 
 type Stage = "input" | "findings" | "diff";
 
@@ -70,6 +70,7 @@ export default function AnalyzePage() {
   const [loading, setLoading] = useState(false);
   const [diffLoading, setDiffLoading] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [inputMode, setInputMode] = useState<"paste" | "upload">("paste");
 
   const stageIndex = stage === "input" ? 0 : stage === "findings" ? 1 : 2;
 
@@ -202,16 +203,68 @@ export default function AnalyzePage() {
           <motion.div key="input" {...slideIn(1)}>
             <div className="mb-6">
               <h1 className="text-2xl font-bold text-[#f9fafb] mb-1">Analyze Code</h1>
-              <p className="text-[#6b7280] text-sm">Drop a file or paste code — we&apos;ll explain every issue in plain English and show you exactly how to fix it.</p>
+              <p className="text-[#6b7280] text-sm">We&apos;ll explain every issue in plain English and show you exactly how to fix it.</p>
             </div>
 
-            <div className="space-y-4">
-              {/* Drop zone */}
+            {/* Mode tabs */}
+            <div className="flex gap-1 mb-4 bg-[#111827] border border-[#374151] rounded-lg p-1 w-fit">
+              <button
+                onClick={() => setInputMode("paste")}
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  inputMode === "paste" ? "bg-[#2563eb] text-white" : "text-[#9ca3af] hover:text-[#f9fafb]"
+                }`}
+              >
+                <FileCode className="w-4 h-4" /> Paste Code
+              </button>
+              <button
+                onClick={() => setInputMode("upload")}
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  inputMode === "upload" ? "bg-[#2563eb] text-white" : "text-[#9ca3af] hover:text-[#f9fafb]"
+                }`}
+              >
+                <UploadCloud className="w-4 h-4" /> Upload File
+              </button>
+            </div>
+
+            {inputMode === "paste" ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 text-[#6b7280]">
+                    <FileCode className="w-4 h-4" />
+                    <input
+                      type="text"
+                      value={filename}
+                      onChange={(e) => setFilename(e.target.value)}
+                      placeholder="filename.py"
+                      className="bg-[#111827] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#f9fafb] placeholder:text-[#6b7280] focus:outline-none focus:border-[#2563eb] transition-colors w-44"
+                    />
+                  </div>
+                  <button
+                    onClick={handleAnalyze}
+                    disabled={loading || !code.trim()}
+                    className="flex items-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
+                  >
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+                    {loading ? "Analyzing…" : "Run Analysis"}
+                  </button>
+                </div>
+
+                <div className="rounded-xl overflow-hidden border border-[#374151]">
+                  <CodeEditor
+                    value={code}
+                    onChange={setCode}
+                    filename={filename}
+                    height="360px"
+                    placeholder="// Paste your code here…"
+                  />
+                </div>
+              </div>
+            ) : (
               <label
                 onDrop={handleFileDrop}
                 onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
                 onDragLeave={() => setDragging(false)}
-                className={`flex flex-col items-center justify-center gap-3 w-full py-10 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
+                className={`flex flex-col items-center justify-center gap-3 w-full py-16 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
                   dragging
                     ? "border-[#2563eb] bg-[#2563eb]/10"
                     : "border-[#374151] bg-[#111827] hover:border-[#4b5563] hover:bg-[#111827]/80"
@@ -244,46 +297,7 @@ export default function AnalyzePage() {
                   </>
                 )}
               </label>
-
-              {/* Divider */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-[#374151]" />
-                <span className="text-xs text-[#4b5563] font-medium uppercase tracking-widest">or paste code</span>
-                <div className="flex-1 h-px bg-[#374151]" />
-              </div>
-
-              {/* Manual paste toolbar + editor */}
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 text-[#6b7280]">
-                  <FileCode className="w-4 h-4" />
-                  <input
-                    type="text"
-                    value={filename}
-                    onChange={(e) => setFilename(e.target.value)}
-                    placeholder="filename.py"
-                    className="bg-[#111827] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#f9fafb] placeholder:text-[#6b7280] focus:outline-none focus:border-[#2563eb] transition-colors w-44"
-                  />
-                </div>
-                <button
-                  onClick={handleAnalyze}
-                  disabled={loading || !code.trim()}
-                  className="flex items-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
-                >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-                  {loading ? "Analyzing…" : "Run Analysis"}
-                </button>
-              </div>
-
-              <div className="rounded-xl overflow-hidden border border-[#374151]">
-                <CodeEditor
-                  value={code}
-                  onChange={setCode}
-                  filename={filename}
-                  height="360px"
-                  placeholder="// Paste your code here…"
-                />
-              </div>
-            </div>
+            )}
           </motion.div>
         )}
 
