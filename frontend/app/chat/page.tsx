@@ -13,7 +13,7 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen relative">
       {/* Main chat */}
-      <div className={cn("flex flex-col flex-1 min-w-0 transition-all", sidebarOpen ? "mr-[380px]" : "")}>
+      <div className={cn("flex flex-col flex-1 min-w-0 transition-all", sidebarOpen ? "sm:mr-[380px]" : "")}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#374151] bg-[#0a0a0a]">
           <div>
             <h1 className="font-semibold text-[#f9fafb]">AI Review Chat</h1>
@@ -34,7 +34,7 @@ export default function ChatPage() {
 
       {/* Code panel */}
       {sidebarOpen && (
-        <div className="fixed right-0 top-0 h-full w-[380px] bg-[#111827] border-l border-[#374151] flex flex-col z-10">
+        <div className="fixed right-0 top-0 h-full w-full sm:w-[380px] bg-[#111827] border-l border-[#374151] flex flex-col z-10">
           <div className="flex items-center justify-between px-4 py-3 border-b border-[#374151]">
             <span className="text-sm font-medium text-[#f9fafb]">Attach Code</span>
             <button onClick={() => setSidebarOpen(false)} className="text-[#6b7280] hover:text-[#f9fafb] transition-colors">

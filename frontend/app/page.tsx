@@ -23,14 +23,14 @@ const rules = [
 
 export default function Home() {
   return (
-    <div className="px-8 py-10 max-w-5xl">
+    <div className="px-4 sm:px-8 py-8 sm:py-10 max-w-5xl">
       <div className="mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2563eb]/10 border border-[#2563eb]/30 text-[#60a5fa] text-xs font-medium mb-4">
           <Sparkles className="w-3 h-3" />
           Phase 7 — Production Ready
         </div>
-        <h1 className="text-4xl font-bold text-[#f9fafb] mb-3 leading-tight">
-          AI-native code review<br />
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#f9fafb] mb-3 leading-tight">
+          AI-native code review<br className="hidden sm:block" />{" "}
           <span className="text-[#2563eb]">that actually catches things</span>
         </h1>
         <p className="text-[#9ca3af] text-lg max-w-2xl">

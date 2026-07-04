@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { AppShell } from "@/components/layout/AppShell";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthGate } from "@/components/auth/AuthGate";
 
@@ -28,10 +28,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${geistMono.variable} dark h-full`}>
       <body className="h-full bg-[#0a0a0a] text-[#f9fafb] antialiased flex">
         <AuthGate>
-          <Sidebar />
-          <main className="flex-1 ml-60 min-h-screen overflow-auto">
-            {children}
-          </main>
+          <AppShell>{children}</AppShell>
         </AuthGate>
         <Toaster theme="dark" />
       </body>

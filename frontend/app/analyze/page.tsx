@@ -186,7 +186,7 @@ export default function AnalyzePage() {
   const styCount = findings.filter((f) => f.rule_id.startsWith("STY")).length;
 
   return (
-    <div className="px-8 py-8 max-w-5xl">
+    <div className="px-4 sm:px-8 py-6 sm:py-8 max-w-5xl">
       <StepBreadcrumb
         steps={STEPS}
         current={stageIndex}
@@ -327,7 +327,7 @@ export default function AnalyzePage() {
             </div>
 
             {findings.length > 0 && (
-              <div className="flex items-center justify-end gap-3">
+              <div className="flex items-center justify-end gap-3 flex-wrap">
                 <button
                   onClick={handleSeeDiff}
                   disabled={diffLoading}

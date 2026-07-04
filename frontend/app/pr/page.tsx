@@ -143,7 +143,7 @@ export default function PRPage() {
   const fixableCount = findings.filter(f => f.fix_example && !isGenericFix(f.fix_example) && f.snippet).length;
 
   return (
-    <div className="px-8 py-8 max-w-5xl">
+    <div className="px-4 sm:px-8 py-6 sm:py-8 max-w-5xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-[#f9fafb] mb-1">PR Review</h1>
         <p className="text-[#6b7280] text-sm">Analyze a GitHub PR, apply fixes, and post a review.</p>
@@ -182,7 +182,7 @@ export default function PRPage() {
         {stage === "findings" && (
           <motion.div key="findings" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
             {/* Stats */}
-            <div className="grid grid-cols-4 gap-3 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
               {[
                 { label: "Files changed", value: result?.files_changed ?? "—" },
                 { label: "Additions", value: `+${result?.additions ?? 0}`, color: "text-green-400" },
@@ -227,12 +227,12 @@ export default function PRPage() {
             {/* Findings */}
             {findings.length > 0 ? (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-[#f97316]" />
                     <span className="text-sm font-medium text-[#f9fafb]">{findings.length} issue{findings.length !== 1 ? "s" : ""} found</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <button
                       onClick={goToDiff}
                       className="flex items-center gap-1.5 text-sm text-[#9ca3af] border border-[#374151] hover:border-[#6b7280] px-3 py-1.5 rounded-lg transition-all"
