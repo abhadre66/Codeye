@@ -40,14 +40,18 @@ export function useUser() {
       setUser(data.user);
       setLoading(false);
 
-      // Save GitHub token from session if profile doesn't have it yet
-      const { data: sessionData } = await supabase.auth.getSession();
-      const providerToken = sessionData.session?.provider_token;
-      const accessToken = sessionData.session?.access_token;
-      if (providerToken && accessToken) {
-        saveGithubToken(accessToken, providerToken);
-      } else {
-        console.warn("No provider_token in session — GitHub token was not (re)saved.");
+      // Save GitHub token from session if signed in with GitHub and the
+      // profile doesn't have it yet. Google sign-ins have no GitHub token
+      // at all — that's expected, not an error.
+      if (data.user.app_metadata?.provider === "github") {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const providerToken = sessionData.session?.provider_token;
+        const accessToken = sessionData.session?.access_token;
+        if (providerToken && accessToken) {
+          saveGithubToken(accessToken, providerToken);
+        } else {
+          console.warn("No provider_token in session — GitHub token was not (re)saved.");
+        }
       }
     };
 
@@ -57,7 +61,7 @@ export function useUser() {
       setUser(session?.user ?? null);
 
       // After GitHub OAuth sign-in, save the provider_token (GitHub token) to backend
-      if (event === "SIGNED_IN") {
+      if (event === "SIGNED_IN" && session?.user.app_metadata?.provider === "github") {
         if (session?.provider_token && session.access_token) {
           saveGithubToken(session.access_token, session.provider_token);
         } else {
@@ -75,7 +79,13 @@ export function useUser() {
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
 
+  const signInWithGoogle = () =>
+    supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+
   const signOut = () => supabase.auth.signOut();
 
-  return { user, loading, signInWithGitHub, signOut };
+  return { user, loading, signInWithGitHub, signInWithGoogle, signOut };
 }
