@@ -4,6 +4,25 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
+async function saveGithubToken(accessToken: string, githubToken: string) {
+  try {
+    const res = await fetch("/api/profile/github-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ github_token: githubToken }),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error("Failed to save GitHub token:", res.status, body);
+    }
+  } catch (err) {
+    console.error("Failed to save GitHub token:", err);
+  }
+}
+
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,14 +45,9 @@ export function useUser() {
       const providerToken = sessionData.session?.provider_token;
       const accessToken = sessionData.session?.access_token;
       if (providerToken && accessToken) {
-        fetch("/api/profile/github-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ github_token: providerToken }),
-        }).catch(() => {});
+        saveGithubToken(accessToken, providerToken);
+      } else {
+        console.warn("No provider_token in session — GitHub token was not (re)saved.");
       }
     };
 
@@ -43,15 +57,12 @@ export function useUser() {
       setUser(session?.user ?? null);
 
       // After GitHub OAuth sign-in, save the provider_token (GitHub token) to backend
-      if (event === "SIGNED_IN" && session?.provider_token) {
-        fetch("/api/profile/github-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ github_token: session.provider_token }),
-        }).catch(() => {});
+      if (event === "SIGNED_IN") {
+        if (session?.provider_token && session.access_token) {
+          saveGithubToken(session.access_token, session.provider_token);
+        } else {
+          console.warn("SIGNED_IN without provider_token — GitHub token was not saved.");
+        }
       }
     });
 

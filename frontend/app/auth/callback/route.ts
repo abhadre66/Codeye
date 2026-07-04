@@ -22,18 +22,33 @@ export async function GET(request: Request) {
       }
     );
 
-    const { data } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      console.error("exchangeCodeForSession failed:", error.message);
+    }
 
-    // Save GitHub token to profiles table right after OAuth
+    // Save GitHub token to profiles table right after OAuth.
+    // Call the backend directly (not through this same deployment's /api
+    // rewrite) to avoid a self-referential hairpin request.
     if (data.session?.provider_token && data.session?.access_token) {
-      await fetch(`${origin}/api/profile/github-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${data.session.access_token}`,
-        },
-        body: JSON.stringify({ github_token: data.session.provider_token }),
-      }).catch(() => {});
+      const backendUrl = process.env.BACKEND_URL || "http://localhost:8000";
+      try {
+        const res = await fetch(`${backendUrl}/profile/github-token`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${data.session.access_token}`,
+          },
+          body: JSON.stringify({ github_token: data.session.provider_token }),
+        });
+        if (!res.ok) {
+          console.error("Failed to save GitHub token:", res.status, await res.text().catch(() => ""));
+        }
+      } catch (err) {
+        console.error("Failed to save GitHub token:", err);
+      }
+    } else {
+      console.warn("No provider_token after OAuth exchange — GitHub token was not saved.");
     }
   }
 

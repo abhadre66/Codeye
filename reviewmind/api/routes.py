@@ -4,7 +4,7 @@ import dataclasses
 import json
 from typing import Any
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy import text
@@ -106,12 +106,17 @@ async def save_github_token(
     from reviewmind.api.supabase_client import get_supabase
     from reviewmind.core.crypto import encrypt_token
     supabase = get_supabase()
-    supabase.table("profiles").upsert({
-        "id": user.id,
-        "github_token": encrypt_token(req.github_token),
-        "github_username": user.user_metadata.get("user_name", ""),
-    }).execute()
-    return {"ok": True}
+    try:
+        result = supabase.table("profiles").upsert({
+            "id": user.id,
+            "github_token": encrypt_token(req.github_token),
+            "github_username": user.user_metadata.get("user_name", ""),
+        }).execute()
+        logger.info("github_token_saved", user_id=user.id, row_count=len(result.data or []))
+        return {"ok": True}
+    except Exception as exc:
+        logger.error("github_token_save_failed", user_id=user.id, error=str(exc))
+        raise HTTPException(status_code=500, detail=f"Failed to save GitHub token: {exc}")
 
 @router.get("/health")
 async def health(session: AsyncSession = Depends(get_session)) -> dict:
