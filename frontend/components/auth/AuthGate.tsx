@@ -39,8 +39,8 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       <div className="relative h-full w-full flex items-center justify-center bg-[#08080f] px-4 overflow-hidden ambient-glow">
         <div className="w-full max-w-sm">
           <div className="flex flex-col items-center text-center mb-8">
-            <Logo size={56} className="mb-5 drop-shadow-[0_0_24px_rgba(34,211,238,0.35)]" />
-            <h1 className="text-2xl font-bold font-display tracking-tight gradient-text">ReviewMind</h1>
+            <Logo size={104} className="mb-5 drop-shadow-[0_0_40px_rgba(34,211,238,0.45)] float-slow" />
+            <h1 className="text-3xl font-bold font-display tracking-tight gradient-text">ReviewMind</h1>
             <p className="text-sm text-[#7d84a3] mt-2">
               Sign in to analyze PRs, review code, and get AI-powered fixes.
             </p>

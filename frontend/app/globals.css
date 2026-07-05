@@ -83,6 +83,34 @@ body {
   color: transparent;
 }
 
+/* Faint blueprint grid backdrop */
+.grid-bg {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent-bright) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-bright) 5%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+}
+
+/* Slow float for the hero emblem */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.float-slow { animation: float-slow 7s ease-in-out infinite; }
+
+/* Terminal cursor */
+@keyframes cursor-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.cursor-blink { animation: cursor-blink 1.1s steps(1) infinite; color: var(--accent-bright); }
+
+/* Rules marquee */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee { animation: marquee 40s linear infinite; }
+.marquee:hover { animation-play-state: paused; }
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
 /* Soft ambient glow, positioned via a wrapping relative container */
 .ambient-glow::before {
   content: "";
