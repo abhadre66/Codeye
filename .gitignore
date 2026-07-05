@@ -31,9 +31,12 @@ venv/
 # Sample files (local test fixtures only)
 samples/
 
-# Project docs/assets
+# Project docs/assets (root-level only — frontend assets must stay tracked)
 *.png
 *.pdf
+*.html
+!frontend/public/**/*.png
+!frontend/app/icon.png
 reviewmind_blueprint.md
 md/
 
