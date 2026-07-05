@@ -8,8 +8,8 @@
   --elevated: #1a1c2e;
   --border: #262a3d;
   --border-strong: #363a52;
-  --accent: #0891b2;
-  --accent-hover: #0e7490;
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
   --accent-bright: #22d3ee;
   --accent-2: #818cf8;
   --muted: #7d84a3;
@@ -77,7 +77,7 @@ body {
 
 /* Gradient text — used for headline/wordmark emphasis */
 .gradient-text {
-  background: linear-gradient(90deg, var(--accent-bright), var(--accent-2));
+  background: linear-gradient(90deg, #a78bfa, var(--accent-bright));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

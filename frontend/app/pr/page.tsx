@@ -238,7 +238,7 @@ export default function PRPage() {
                     {fixableCount > 0 && (
                       <button
                         onClick={handleApplyAll}
-                        className="flex items-center gap-1.5 text-sm font-medium text-white bg-[#0891b2] hover:bg-[#0e7490] px-3 py-1.5 rounded-lg transition-all"
+                        className="flex items-center gap-1.5 text-sm font-medium text-white bg-[#7c3aed] hover:bg-[#6d28d9] px-3 py-1.5 rounded-lg transition-all"
                       >
                         <Wand2 className="w-3.5 h-3.5" /> Apply all fixes ({fixableCount})
                       </button>
@@ -260,7 +260,7 @@ export default function PRPage() {
               </button>
               <button
                 onClick={goToDiff}
-                className="flex items-center gap-2 text-sm font-medium text-white bg-[#0891b2] hover:bg-[#0e7490] px-4 py-2 rounded-lg transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-white bg-[#7c3aed] hover:bg-[#6d28d9] px-4 py-2 rounded-lg transition-colors"
               >
                 <GitCompare className="w-4 h-4" /> See Diff & Post Review
               </button>
@@ -283,7 +283,7 @@ export default function PRPage() {
                   <button
                     key={f.filename}
                     onClick={() => { setSelectedFile(f); setFixedContent(applyFixes(f.after, appliedFindings)); }}
-                    className={`text-xs font-mono px-3 py-1.5 rounded-lg border transition-all ${selectedFile?.filename === f.filename ? "bg-[#0891b2] border-[#0891b2] text-white" : "border-[#262a3d] text-[#a8adc9] hover:border-[#7d84a3]"}`}
+                    className={`text-xs font-mono px-3 py-1.5 rounded-lg border transition-all ${selectedFile?.filename === f.filename ? "bg-[#7c3aed] border-[#7c3aed] text-white" : "border-[#262a3d] text-[#a8adc9] hover:border-[#7d84a3]"}`}
                   >
                     {f.filename}
                   </button>
@@ -329,7 +329,7 @@ export default function PRPage() {
                     <button
                       key={e}
                       onClick={() => setReviewEvent(e)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${reviewEvent === e ? "bg-[#0891b2] border-[#0891b2] text-white" : "border-[#262a3d] text-[#a8adc9] hover:border-[#7d84a3]"}`}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${reviewEvent === e ? "bg-[#7c3aed] border-[#7c3aed] text-white" : "border-[#262a3d] text-[#a8adc9] hover:border-[#7d84a3]"}`}
                     >
                       {e.replace("_", " ")}
                     </button>
@@ -343,7 +343,7 @@ export default function PRPage() {
                   onChange={(e) => setReviewBody(e.target.value)}
                   rows={6}
                   placeholder="Write your review comments in Markdown… (applied fixes are added automatically)"
-                  className="w-full bg-[#1a1c2e] border border-[#262a3d] rounded-lg px-3 py-2.5 text-sm text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#0891b2] resize-none"
+                  className="w-full bg-[#1a1c2e] border border-[#262a3d] rounded-lg px-3 py-2.5 text-sm text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#7c3aed] resize-none"
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -353,7 +353,7 @@ export default function PRPage() {
                 <button
                   onClick={handlePostReview}
                   disabled={posting || !reviewBody.trim()}
-                  className="flex items-center gap-2 bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
+                  className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
                 >
                   {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   {user ? "Post Review" : "Sign in & Post"}

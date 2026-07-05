@@ -169,6 +169,7 @@ async def list_history(
             "findings_count": r.findings_count,
             "security_count": r.security_count,
             "style_count": r.style_count,
+            "status": r.status,
             "created_at": r.created_at.isoformat(),
         }
         for r in rows
@@ -193,9 +194,35 @@ async def get_history_entry(
         "id": row.id,
         "source": row.source,
         "label": row.label,
+        "status": row.status,
         "created_at": row.created_at.isoformat(),
         "payload": json.loads(row.payload),
     }
+
+
+class HistoryStatusRequest(BaseModel):
+    status: str  # pending | fixed | dismissed
+
+
+@router.patch("/history/{history_id}")
+async def update_history_status(
+    history_id: int,
+    req: HistoryStatusRequest,
+    user: dict = Depends(require_auth),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    if req.status not in ("pending", "fixed", "dismissed"):
+        raise HTTPException(status_code=422, detail="status must be pending, fixed, or dismissed")
+    stmt = select(AnalysisHistory).where(
+        AnalysisHistory.id == history_id,
+        AnalysisHistory.user_id == user.id,
+    )
+    row = (await session.execute(stmt)).scalar_one_or_none()
+    if row is None:
+        raise HTTPException(status_code=404, detail="History entry not found")
+    row.status = req.status
+    await session.commit()
+    return {"ok": True, "id": row.id, "status": row.status}
 
 
 @router.get("/health")

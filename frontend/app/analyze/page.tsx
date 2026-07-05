@@ -213,7 +213,7 @@ export default function AnalyzePage() {
               <button
                 onClick={() => setInputMode("paste")}
                 className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  inputMode === "paste" ? "bg-[#0891b2] text-white" : "text-[#a8adc9] hover:text-[#f4f5fc]"
+                  inputMode === "paste" ? "bg-[#7c3aed] text-white" : "text-[#a8adc9] hover:text-[#f4f5fc]"
                 }`}
               >
                 <FileCode className="w-4 h-4" /> Paste Code
@@ -221,7 +221,7 @@ export default function AnalyzePage() {
               <button
                 onClick={() => setInputMode("upload")}
                 className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  inputMode === "upload" ? "bg-[#0891b2] text-white" : "text-[#a8adc9] hover:text-[#f4f5fc]"
+                  inputMode === "upload" ? "bg-[#7c3aed] text-white" : "text-[#a8adc9] hover:text-[#f4f5fc]"
                 }`}
               >
                 <UploadCloud className="w-4 h-4" /> Upload File
@@ -238,13 +238,13 @@ export default function AnalyzePage() {
                       value={filename}
                       onChange={(e) => setFilename(e.target.value)}
                       placeholder="filename.py"
-                      className="bg-[#12131f] border border-[#262a3d] rounded-lg px-3 py-2 text-sm text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#0891b2] transition-colors w-44"
+                      className="bg-[#12131f] border border-[#262a3d] rounded-lg px-3 py-2 text-sm text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#7c3aed] transition-colors w-44"
                     />
                   </div>
                   <button
                     onClick={handleAnalyze}
                     disabled={loading || !code.trim()}
-                    className="flex items-center gap-2 bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
+                    className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                     {loading ? "Analyzing…" : "Run Analysis"}
@@ -268,20 +268,20 @@ export default function AnalyzePage() {
                 onDragLeave={() => setDragging(false)}
                 className={`flex flex-col items-center justify-center gap-3 w-full py-16 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
                   dragging
-                    ? "border-[#0891b2] bg-[#0891b2]/10"
+                    ? "border-[#7c3aed] bg-[#7c3aed]/10"
                     : "border-[#262a3d] bg-[#12131f] hover:border-[#363a52] hover:bg-[#12131f]/80"
                 }`}
               >
                 <input type="file" className="hidden" onChange={handleFileInput} accept=".py,.ts,.tsx,.js,.jsx,.go,.rs,.java,.cs,.cpp,.c,.rb,.php,.sh,.sql,.html,.css,.json,.yaml,.yml,.md" />
                 {loading ? (
                   <>
-                    <Loader2 className="w-8 h-8 text-[#0891b2] animate-spin" />
+                    <Loader2 className="w-8 h-8 text-[#7c3aed] animate-spin" />
                     <p className="text-sm text-[#7d84a3]">Analyzing <span className="text-[#f4f5fc] font-medium">{filename}</span>…</p>
                   </>
                 ) : (
                   <>
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${dragging ? "bg-[#0891b2]/20" : "bg-[#1a1c2e]"}`}>
-                      <UploadCloud className={`w-6 h-6 ${dragging ? "text-[#0891b2]" : "text-[#7d84a3]"}`} />
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${dragging ? "bg-[#7c3aed]/20" : "bg-[#1a1c2e]"}`}>
+                      <UploadCloud className={`w-6 h-6 ${dragging ? "text-[#7c3aed]" : "text-[#7d84a3]"}`} />
                     </div>
                     <div className="text-center">
                       <p className="text-sm font-medium text-[#f4f5fc]">
@@ -357,7 +357,7 @@ export default function AnalyzePage() {
                 <button
                   onClick={handleApplyAll}
                   disabled={diffLoading}
-                  className="flex items-center gap-2 bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-colors"
+                  className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-colors"
                 >
                   <Wand2 className="w-4 h-4" />
                   Apply all fixes

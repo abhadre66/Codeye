@@ -23,12 +23,12 @@ export function MessageBubble({ message, isLast }: Props) {
       className={cn("flex gap-3 max-w-4xl", isUser ? "ml-auto flex-row-reverse" : "")}
     >
       {/* Avatar */}
-      <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5", isUser ? "bg-[#0891b2]" : "bg-[#1a1c2e] border border-[#262a3d]")}>
+      <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5", isUser ? "bg-[#7c3aed]" : "bg-[#1a1c2e] border border-[#262a3d]")}>
         {isUser ? <User className="w-3.5 h-3.5 text-white" /> : <Bot className="w-3.5 h-3.5 text-[#a8adc9]" />}
       </div>
 
       {/* Content */}
-      <div className={cn("rounded-xl px-4 py-3 max-w-[85%] text-sm leading-relaxed", isUser ? "bg-[#0891b2] text-white rounded-tr-sm" : "bg-[#1a1c2e] border border-[#262a3d] text-[#c7cbe3] rounded-tl-sm")}>
+      <div className={cn("rounded-xl px-4 py-3 max-w-[85%] text-sm leading-relaxed", isUser ? "bg-[#7c3aed] text-white rounded-tr-sm" : "bg-[#1a1c2e] border border-[#262a3d] text-[#c7cbe3] rounded-tl-sm")}>
         {isUser ? (
           <p className="whitespace-pre-wrap">{message.content}</p>
         ) : (

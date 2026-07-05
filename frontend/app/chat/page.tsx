@@ -21,7 +21,7 @@ export default function ChatPage() {
           </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition-all", sidebarOpen ? "bg-[#1a1c2e] border-[#0891b2] text-[#22d3ee]" : "border-[#262a3d] text-[#7d84a3] hover:text-[#a8adc9]")}
+            className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition-all", sidebarOpen ? "bg-[#1a1c2e] border-[#7c3aed] text-[#22d3ee]" : "border-[#262a3d] text-[#7d84a3] hover:text-[#a8adc9]")}
           >
             <PanelRight className="w-3.5 h-3.5" />
             {attachedCode ? "Code attached" : "Attach code"}

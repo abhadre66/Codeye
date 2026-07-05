@@ -144,4 +144,5 @@ class AnalysisHistory(Base):
     security_count: Mapped[int] = mapped_column(Integer, default=0)
     style_count: Mapped[int] = mapped_column(Integer, default=0)
     payload: Mapped[str] = mapped_column(Text, nullable=False)        # JSON: findings + code, for reopening
+    status: Mapped[str] = mapped_column(String(20), default="pending")  # pending | fixed | dismissed
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)

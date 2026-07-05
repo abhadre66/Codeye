@@ -76,7 +76,7 @@ export function FindingsList({ findings, title, onApplyFix, applyFixLabel }: Pro
             placeholder="Search by rule, message, or file..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 text-sm bg-[#1a1c2e] border border-[#262a3d] rounded-lg text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#0891b2]"
+            className="w-full pl-8 pr-3 py-1.5 text-sm bg-[#1a1c2e] border border-[#262a3d] rounded-lg text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#7c3aed]"
           />
         </div>
         <div className="flex items-center gap-1.5 flex-wrap">

@@ -98,6 +98,8 @@ export const postReview = (
   post<{ ok: boolean; result: unknown }>("/pr/review", { owner, repo, pr_number, body, event, confirmed, comments }, true);
 
 // ── History ───────────────────────────────────────────────────────────────────
+export type HistoryStatus = "pending" | "fixed" | "dismissed";
+
 export interface HistoryEntry {
   id: number;
   source: "paste" | "upload" | "pr";
@@ -105,6 +107,7 @@ export interface HistoryEntry {
   findings_count: number;
   security_count: number;
   style_count: number;
+  status: HistoryStatus;
   created_at: string;
 }
 
@@ -117,8 +120,20 @@ export const getHistory = async () => {
 
 export const getHistoryEntry = async (id: number) => {
   const token = await getToken();
-  return req<{ ok: boolean; id: number; source: string; label: string; created_at: string; payload: Record<string, unknown> }>(
+  return req<{ ok: boolean; id: number; source: string; label: string; status: HistoryStatus; created_at: string; payload: Record<string, unknown> }>(
     `/history/${id}`,
     { headers: token ? { Authorization: `Bearer ${token}` } : {} },
   );
+};
+
+export const updateHistoryStatus = async (id: number, status: HistoryStatus) => {
+  const token = await getToken();
+  return req<{ ok: boolean; id: number; status: HistoryStatus }>(`/history/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ status }),
+  });
 };

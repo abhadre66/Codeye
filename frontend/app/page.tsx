@@ -20,7 +20,7 @@ export default function Home() {
     <div className="relative overflow-hidden">
       {/* Backdrop: grid + glow */}
       <div className="absolute inset-0 grid-bg pointer-events-none" />
-      <div className="absolute -top-40 -right-40 w-[560px] h-[560px] rounded-full bg-[#0891b2]/20 blur-[140px] pointer-events-none" />
+      <div className="absolute -top-40 -right-40 w-[560px] h-[560px] rounded-full bg-[#7c3aed]/20 blur-[140px] pointer-events-none" />
       <div className="absolute top-96 -left-40 w-[420px] h-[420px] rounded-full bg-[#818cf8]/15 blur-[120px] pointer-events-none" />
 
       <div className="relative px-4 sm:px-8 py-10 sm:py-16 max-w-6xl">
@@ -42,7 +42,7 @@ export default function Home() {
               on PRs, pasted snippets, and uploaded files.
             </p>
             <div className="flex gap-3 flex-wrap">
-              <Link href="/analyze" className="group flex items-center gap-2 bg-gradient-to-r from-[#0891b2] to-[#6366f1] hover:opacity-90 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all">
+              <Link href="/analyze" className="group flex items-center gap-2 bg-gradient-to-r from-[#7c3aed] to-[#6366f1] hover:opacity-90 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all">
                 Scan my code
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>

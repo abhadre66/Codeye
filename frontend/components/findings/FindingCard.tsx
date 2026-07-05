@@ -18,11 +18,26 @@ export interface Finding {
 }
 
 const SEVERITY_CONFIG = {
-  critical: { label: "Critical", bg: "bg-red-950/60", text: "text-red-400", border: "border-red-900/60", icon: ShieldAlert },
-  high:     { label: "High",     bg: "bg-orange-950/60", text: "text-orange-400", border: "border-orange-900/60", icon: AlertTriangle },
-  medium:   { label: "Medium",   bg: "bg-yellow-950/60", text: "text-yellow-400", border: "border-yellow-900/60", icon: AlertTriangle },
-  low:      { label: "Low",      bg: "bg-blue-950/60",  text: "text-blue-400",  border: "border-blue-900/60",  icon: Info },
-  info:     { label: "Info",     bg: "bg-gray-900/60",  text: "text-gray-400",  border: "border-gray-800/60",  icon: Info },
+  critical: { label: "CRITICAL", score: 9.8, bg: "bg-red-950/40", text: "text-red-400", border: "border-red-900/60", iconBg: "bg-red-500/15 border-red-500/40", icon: ShieldAlert },
+  high:     { label: "HIGH",     score: 8.2, bg: "bg-orange-950/40", text: "text-orange-400", border: "border-orange-900/60", iconBg: "bg-orange-500/15 border-orange-500/40", icon: AlertTriangle },
+  medium:   { label: "WARNING",  score: 5.6, bg: "bg-yellow-950/30", text: "text-yellow-400", border: "border-yellow-900/60", iconBg: "bg-yellow-500/15 border-yellow-500/40", icon: AlertTriangle },
+  low:      { label: "LOW",      score: 3.1, bg: "bg-blue-950/30",  text: "text-blue-400",  border: "border-blue-900/60",  iconBg: "bg-blue-500/15 border-blue-500/40", icon: Info },
+  info:     { label: "INFO",     score: 1.2, bg: "bg-gray-900/40",  text: "text-gray-400",  border: "border-gray-800/60",  iconBg: "bg-gray-500/15 border-gray-500/40", icon: Info },
+};
+
+// Short display titles per rule — the big headline on each card
+const RULE_TITLES: Record<string, string> = {
+  SEC001: "Hardcoded Secret",
+  SEC002: "SQL Injection",
+  SEC003: "Insecure Dependency",
+  SEC004: "Missing Validation",
+  SEC005: "Unsafe Deserialization",
+  STY001: "Function Too Long",
+  STY002: "Missing Docstring",
+  STY003: "Naming Convention",
+  STY004: "Forbidden Import",
+  STY005: "Line Too Long",
+  STY006: "TODO Without Ticket",
 };
 
 interface Props {
@@ -44,26 +59,35 @@ export function FindingCard({ finding, index = 0, onApplyFix, applyFixLabel = "A
       transition={{ delay: index * 0.04, duration: 0.2 }}
       className={cn("rounded-lg border overflow-hidden", cfg.border, cfg.bg)}
     >
-      {/* Header — plain language first */}
+      {/* Header — big title + risk score */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-white/5 transition-colors"
+        className="w-full flex items-center gap-3.5 px-4 py-3.5 text-left hover:bg-white/5 transition-colors"
       >
-        <Icon className={cn("w-4 h-4 mt-0.5 flex-shrink-0", cfg.text)} />
+        <div className={cn("w-11 h-11 rounded-xl border flex items-center justify-center flex-shrink-0", cfg.iconBg)}>
+          <Icon className={cn("w-5 h-5", cfg.text)} />
+        </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className={cn("text-xs font-medium px-1.5 py-0.5 rounded-full border", cfg.text, cfg.border)}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-[#f4f5fc] leading-tight">
+              {RULE_TITLES[finding.rule_id] ?? finding.rule_id}
+            </h3>
+            <span className={cn("text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-md border", cfg.text, cfg.border, cfg.bg)}>
               {cfg.label}
             </span>
-            {finding.file_path && (
-              <span className="text-xs text-[#7d84a3] font-mono truncate max-w-[200px]">
-                {finding.file_path}{finding.line ? `:${finding.line}` : ""}
-              </span>
-            )}
           </div>
-          <p className="text-sm text-[#f4f5fc] leading-snug font-medium">{finding.message}</p>
+          <p className="text-xs text-[#a8adc9] mt-0.5 truncate">{finding.message}</p>
+          {finding.file_path && (
+            <p className="text-[11px] text-[#7d84a3] font-mono mt-0.5 truncate">
+              {finding.file_path}{finding.line ? `:${finding.line}` : ""}
+            </p>
+          )}
         </div>
-        <ChevronDown className={cn("w-4 h-4 flex-shrink-0 text-[#7d84a3] transition-transform mt-0.5", expanded && "rotate-180")} />
+        <div className="flex flex-col items-center flex-shrink-0 pl-1">
+          <span className={cn("text-2xl font-bold font-display leading-none", cfg.text)}>{cfg.score.toFixed(1)}</span>
+          <span className="text-[9px] uppercase tracking-widest text-[#7d84a3] mt-1">risk</span>
+        </div>
+        <ChevronDown className={cn("w-4 h-4 flex-shrink-0 text-[#7d84a3] transition-transform", expanded && "rotate-180")} />
       </button>
 
       {/* Expanded details — fix description first, then code, rule ID last */}
@@ -116,7 +140,7 @@ export function FindingCard({ finding, index = 0, onApplyFix, applyFixLabel = "A
                       ) : (
                         <button
                           onClick={(e) => { e.stopPropagation(); onApplyFix(finding); }}
-                          className="flex items-center gap-1.5 text-xs font-medium text-[#0891b2] hover:text-white bg-[#0891b2]/10 hover:bg-[#0891b2] border border-[#0891b2]/40 px-2.5 py-1 rounded-lg transition-all"
+                          className="flex items-center gap-1.5 text-xs font-medium text-[#7c3aed] hover:text-white bg-[#7c3aed]/10 hover:bg-[#7c3aed] border border-[#7c3aed]/40 px-2.5 py-1 rounded-lg transition-all"
                         >
                           <Wand2 className="w-3 h-3" />
                           {applyFixLabel}

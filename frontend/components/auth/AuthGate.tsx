@@ -50,7 +50,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => handleSignIn("github")}
               disabled={signingIn !== null}
-              className="w-full bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-medium py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
             >
               {signingIn === "github" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitBranch className="w-4 h-4" />}
               {signingIn === "github" ? "Redirecting…" : "Continue with GitHub"}

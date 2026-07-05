@@ -51,8 +51,8 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center h-full text-center py-20"
           >
-            <div className="w-12 h-12 rounded-2xl bg-[#0891b2]/20 border border-[#0891b2]/30 flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-[#0891b2]" />
+            <div className="w-12 h-12 rounded-2xl bg-[#7c3aed]/20 border border-[#7c3aed]/30 flex items-center justify-center mb-4">
+              <Zap className="w-6 h-6 text-[#7c3aed]" />
             </div>
             <h2 className="text-xl font-bold text-[#f4f5fc] mb-2">Start a review</h2>
             <p className="text-[#7d84a3] text-sm max-w-md mb-6">
@@ -89,7 +89,7 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
                   exit={{ opacity: 0, y: -6 }}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1a1c2e] border border-[#262a3d] w-fit"
                 >
-                  <Wrench className="w-3.5 h-3.5 text-[#0891b2]" />
+                  <Wrench className="w-3.5 h-3.5 text-[#7c3aed]" />
                   <span className="text-xs text-[#a8adc9]">
                     {activeTool.status === "running" ? `Calling` : `Done`}:{" "}
                     <span className="text-[#22d3ee] font-mono">{activeTool.name}</span>
@@ -99,7 +99,7 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
                       {[0, 1, 2].map((i) => (
                         <motion.span
                           key={i}
-                          className="w-1 h-1 rounded-full bg-[#0891b2]"
+                          className="w-1 h-1 rounded-full bg-[#7c3aed]"
                           animate={{ opacity: [0.3, 1, 0.3] }}
                           transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
                         />
@@ -134,7 +134,7 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
             className={cn(
               "flex-1 resize-none bg-[#12131f] border border-[#262a3d] rounded-xl px-4 py-3",
               "text-sm text-[#f4f5fc] placeholder:text-[#7d84a3]",
-              "focus:outline-none focus:border-[#0891b2] transition-colors",
+              "focus:outline-none focus:border-[#7c3aed] transition-colors",
               "max-h-40 overflow-y-auto scrollbar-thin"
             )}
             style={{ height: "auto", minHeight: "48px" }}
@@ -151,7 +151,7 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
             className={cn(
               "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
               input.trim() && !isStreaming
-                ? "bg-[#0891b2] hover:bg-[#0e7490] text-white"
+                ? "bg-[#7c3aed] hover:bg-[#6d28d9] text-white"
                 : "bg-[#1a1c2e] text-[#7d84a3] cursor-not-allowed"
             )}
           >

@@ -86,11 +86,11 @@ export function Sidebar({ open = false, onClose }: Props) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 mb-0.5",
                   active
-                    ? "bg-[#0891b2]/15 text-[#f4f5fc] font-medium"
+                    ? "bg-[#7c3aed]/15 text-[#f4f5fc] font-medium"
                     : "text-[#a8adc9] hover:text-[#f4f5fc] hover:bg-[#1a1c2e]"
                 )}
               >
-                <Icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-[#0891b2]" : "")} />
+                <Icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-[#7c3aed]" : "")} />
                 {item.label}
               </Link>
             );

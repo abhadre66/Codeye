@@ -38,8 +38,8 @@ export function AuthModal({ open, onClose, onSuccess }: Props) {
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-[#12131f] border-[#262a3d] text-[#f4f5fc] max-w-sm">
         <DialogHeader>
-          <div className="w-10 h-10 rounded-xl bg-[#0891b2]/20 border border-[#0891b2]/30 flex items-center justify-center mb-3">
-            <GitBranch className="w-5 h-5 text-[#0891b2]" />
+          <div className="w-10 h-10 rounded-xl bg-[#7c3aed]/20 border border-[#7c3aed]/30 flex items-center justify-center mb-3">
+            <GitBranch className="w-5 h-5 text-[#7c3aed]" />
           </div>
           <DialogTitle className="text-[#f4f5fc]">Sign in to ReviewMind</DialogTitle>
           <DialogDescription className="text-[#7d84a3]">
@@ -50,7 +50,7 @@ export function AuthModal({ open, onClose, onSuccess }: Props) {
           <button
             onClick={() => handleSignIn("github")}
             disabled={loading !== null}
-            className="w-full bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-medium py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
           >
             {loading === "github" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitBranch className="w-4 h-4" />}
             {loading === "github" ? "Redirecting…" : "Continue with GitHub"}
