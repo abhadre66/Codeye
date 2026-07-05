@@ -9,6 +9,8 @@ import { CodeEditor } from "@/components/code/CodeEditor";
 import { FindingsList } from "@/components/findings/FindingsList";
 import { CodeDiff } from "@/components/diff/CodeDiff";
 import { StepBreadcrumb } from "@/components/analyze/StepBreadcrumb";
+import { ScanStats } from "@/components/analyze/ScanStats";
+import { PipelineStrip } from "@/components/analyze/PipelineStrip";
 import type { Finding } from "@/components/findings/FindingCard";
 import { toast } from "sonner";
 
@@ -322,8 +324,24 @@ export default function AnalyzePage() {
               </button>
             </div>
 
-            <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-6 mb-4">
-              <FindingsList findings={findings} onApplyFix={handleApplyFix} />
+            {/* Scan stats */}
+            <div className="mb-4">
+              <ScanStats filesScanned={1} findings={findings} />
+            </div>
+
+            {/* Code + findings side by side */}
+            <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-4 mb-4">
+              <div className="hidden lg:block rounded-xl overflow-hidden border border-[#262a3d] self-start">
+                <CodeEditor value={currentCode} onChange={() => {}} filename={filename} height="520px" readOnly />
+              </div>
+              <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-5">
+                <FindingsList findings={findings} onApplyFix={handleApplyFix} />
+              </div>
+            </div>
+
+            {/* Pipeline */}
+            <div className="mb-4">
+              <PipelineStrip />
             </div>
 
             {findings.length > 0 && (

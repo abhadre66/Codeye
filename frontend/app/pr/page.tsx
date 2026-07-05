@@ -6,6 +6,8 @@ import { PRInput } from "@/components/pr/PRInput";
 import { FindingsList } from "@/components/findings/FindingsList";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { StepBreadcrumb } from "@/components/analyze/StepBreadcrumb";
+import { ScanStats } from "@/components/analyze/ScanStats";
+import { PipelineStrip } from "@/components/analyze/PipelineStrip";
 import type { Finding } from "@/components/findings/FindingCard";
 import { postReview, getReviewers, getPRFilesContent, type PRFileContent } from "@/lib/api";
 import { useUser } from "@/lib/hooks/useUser";
@@ -181,27 +183,21 @@ export default function PRPage() {
         {/* ── Stage 2: Findings ── */}
         {stage === "findings" && (
           <motion.div key="findings" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
-            {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-              {[
-                { label: "Files changed", value: result?.files_changed ?? "—" },
-                { label: "Additions", value: `+${result?.additions ?? 0}`, color: "text-green-400" },
-                { label: "Deletions", value: `-${result?.deletions ?? 0}`, color: "text-red-400" },
-                { label: "Issues found", value: allFindings.length, color: allFindings.length > 0 ? "text-orange-400" : "text-green-400" },
-              ].map((s) => (
-                <div key={s.label} className="bg-[#12131f] border border-[#262a3d] rounded-xl p-4 text-center">
-                  <p className={`text-2xl font-bold ${s.color ?? "text-[#f4f5fc]"}`}>{s.value}</p>
-                  <p className="text-xs text-[#7d84a3] mt-1">{s.label}</p>
-                </div>
-              ))}
+            {/* Scan stats */}
+            <div className="mb-6">
+              <ScanStats filesScanned={result?.files_changed ?? 0} findings={allFindings} />
             </div>
 
             {/* Summary */}
             {result?.summary && (
               <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-5 mb-5">
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
                   <GitPullRequest className="w-4 h-4 text-[#818cf8]" />
                   <h3 className="font-semibold text-[#f4f5fc]">PR #{coords?.pr_number} — {coords?.owner}/{coords?.repo}</h3>
+                  <span className="ml-auto font-mono text-xs">
+                    <span className="text-green-400">+{result?.additions ?? 0}</span>{" "}
+                    <span className="text-red-400">-{result?.deletions ?? 0}</span>
+                  </span>
                 </div>
                 <p className="text-sm text-[#c7cbe3] leading-relaxed whitespace-pre-wrap">{result.summary}</p>
               </div>
@@ -268,6 +264,10 @@ export default function PRPage() {
               >
                 <GitCompare className="w-4 h-4" /> See Diff & Post Review
               </button>
+            </div>
+
+            <div className="mt-6">
+              <PipelineStrip />
             </div>
           </motion.div>
         )}
