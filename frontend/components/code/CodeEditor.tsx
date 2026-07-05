@@ -50,19 +50,19 @@ export function CodeEditor({ value, onChange, filename = "snippet.py", height = 
       onDragOver={handleDragOver}
     >
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-[#252526] border-b border-[#374151]">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-[#252526] border-b border-[#262a3d]">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-[#9ca3af] font-mono">{filename}</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#374151] text-[#6b7280] uppercase tracking-wide">{lang}</span>
+          <span className="text-xs text-[#a8adc9] font-mono">{filename}</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#262a3d] text-[#7d84a3] uppercase tracking-wide">{lang}</span>
         </div>
         <div className="flex items-center gap-2">
           {!readOnly && (
             <>
-              <span className="text-[10px] text-[#6b7280] opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-[10px] text-[#7d84a3] opacity-0 group-hover:opacity-100 transition-opacity">
                 <Upload className="w-3 h-3 inline mr-1" />drop file
               </span>
               {value && (
-                <button onClick={() => onChange("")} className="text-[#6b7280] hover:text-[#f9fafb] transition-colors">
+                <button onClick={() => onChange("")} className="text-[#7d84a3] hover:text-[#f4f5fc] transition-colors">
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -101,7 +101,7 @@ export function CodeEditor({ value, onChange, filename = "snippet.py", height = 
         }}
         loading={
           <div className="flex items-center justify-center bg-[#1e1e1e]" style={{ height }}>
-            <span className="text-xs text-[#6b7280]">Loading editor…</span>
+            <span className="text-xs text-[#7d84a3]">Loading editor…</span>
           </div>
         }
       />

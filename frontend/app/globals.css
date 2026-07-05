@@ -2,21 +2,25 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #f9fafb;
-  --surface: #111827;
-  --elevated: #1f2937;
-  --border: #374151;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --muted: #6b7280;
-  --muted-fg: #9ca3af;
+  --background: #08080f;
+  --foreground: #f4f5fc;
+  --surface: #12131f;
+  --elevated: #1a1c2e;
+  --border: #262a3d;
+  --border-strong: #363a52;
+  --accent: #0891b2;
+  --accent-hover: #0e7490;
+  --accent-bright: #22d3ee;
+  --accent-2: #818cf8;
+  --muted: #7d84a3;
+  --muted-fg: #a8adc9;
+  --body: #c7cbe3;
   --critical: #dc2626;
   --high: #f97316;
   --medium: #eab308;
   --low: #3b82f6;
   --success: #22c55e;
-  --radius: 8px;
+  --radius: 10px;
 }
 
 @theme inline {
@@ -25,15 +29,21 @@
   --color-surface: var(--surface);
   --color-elevated: var(--elevated);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-2: var(--accent-2);
   --color-muted: var(--muted);
   --color-muted-fg: var(--muted-fg);
+  --color-body: var(--body);
   --color-critical: var(--critical);
   --color-high: var(--high);
   --color-medium: var(--medium);
   --color-low: var(--low);
   --color-success: var(--success);
   --font-sans: var(--font-inter);
+  --font-display: var(--font-space-grotesk);
   --font-mono: var(--font-geist-mono);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: var(--radius);
@@ -63,4 +73,23 @@ body {
 ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
 
 /* Focus ring */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 2px; }
+
+/* Gradient text — used for headline/wordmark emphasis */
+.gradient-text {
+  background: linear-gradient(90deg, var(--accent-bright), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft ambient glow, positioned via a wrapping relative container */
+.ambient-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(600px circle at 15% 0%, color-mix(in srgb, var(--accent-bright) 16%, transparent), transparent 60%),
+    radial-gradient(500px circle at 85% 20%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 60%);
+}

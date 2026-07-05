@@ -202,16 +202,16 @@ export default function AnalyzePage() {
         {stage === "input" && (
           <motion.div key="input" {...slideIn(1)}>
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-[#f9fafb] mb-1">Analyze Code</h1>
-              <p className="text-[#6b7280] text-sm">We&apos;ll explain every issue in plain English and show you exactly how to fix it.</p>
+              <h1 className="text-2xl font-bold font-display tracking-tight text-[#f4f5fc] mb-1">Analyze Code</h1>
+              <p className="text-[#7d84a3] text-sm">We&apos;ll explain every issue in plain English and show you exactly how to fix it.</p>
             </div>
 
             {/* Mode tabs */}
-            <div className="flex gap-1 mb-4 bg-[#111827] border border-[#374151] rounded-lg p-1 w-fit">
+            <div className="flex gap-1 mb-4 bg-[#12131f] border border-[#262a3d] rounded-lg p-1 w-fit">
               <button
                 onClick={() => setInputMode("paste")}
                 className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  inputMode === "paste" ? "bg-[#2563eb] text-white" : "text-[#9ca3af] hover:text-[#f9fafb]"
+                  inputMode === "paste" ? "bg-[#0891b2] text-white" : "text-[#a8adc9] hover:text-[#f4f5fc]"
                 }`}
               >
                 <FileCode className="w-4 h-4" /> Paste Code
@@ -219,7 +219,7 @@ export default function AnalyzePage() {
               <button
                 onClick={() => setInputMode("upload")}
                 className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  inputMode === "upload" ? "bg-[#2563eb] text-white" : "text-[#9ca3af] hover:text-[#f9fafb]"
+                  inputMode === "upload" ? "bg-[#0891b2] text-white" : "text-[#a8adc9] hover:text-[#f4f5fc]"
                 }`}
               >
                 <UploadCloud className="w-4 h-4" /> Upload File
@@ -229,27 +229,27 @@ export default function AnalyzePage() {
             {inputMode === "paste" ? (
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 text-[#6b7280]">
+                  <div className="flex items-center gap-2 text-[#7d84a3]">
                     <FileCode className="w-4 h-4" />
                     <input
                       type="text"
                       value={filename}
                       onChange={(e) => setFilename(e.target.value)}
                       placeholder="filename.py"
-                      className="bg-[#111827] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#f9fafb] placeholder:text-[#6b7280] focus:outline-none focus:border-[#2563eb] transition-colors w-44"
+                      className="bg-[#12131f] border border-[#262a3d] rounded-lg px-3 py-2 text-sm text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#0891b2] transition-colors w-44"
                     />
                   </div>
                   <button
                     onClick={handleAnalyze}
                     disabled={loading || !code.trim()}
-                    className="flex items-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
+                    className="flex items-center gap-2 bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                     {loading ? "Analyzing…" : "Run Analysis"}
                   </button>
                 </div>
 
-                <div className="rounded-xl overflow-hidden border border-[#374151]">
+                <div className="rounded-xl overflow-hidden border border-[#262a3d]">
                   <CodeEditor
                     value={code}
                     onChange={setCode}
@@ -266,32 +266,32 @@ export default function AnalyzePage() {
                 onDragLeave={() => setDragging(false)}
                 className={`flex flex-col items-center justify-center gap-3 w-full py-16 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
                   dragging
-                    ? "border-[#2563eb] bg-[#2563eb]/10"
-                    : "border-[#374151] bg-[#111827] hover:border-[#4b5563] hover:bg-[#111827]/80"
+                    ? "border-[#0891b2] bg-[#0891b2]/10"
+                    : "border-[#262a3d] bg-[#12131f] hover:border-[#363a52] hover:bg-[#12131f]/80"
                 }`}
               >
                 <input type="file" className="hidden" onChange={handleFileInput} accept=".py,.ts,.tsx,.js,.jsx,.go,.rs,.java,.cs,.cpp,.c,.rb,.php,.sh,.sql,.html,.css,.json,.yaml,.yml,.md" />
                 {loading ? (
                   <>
-                    <Loader2 className="w-8 h-8 text-[#2563eb] animate-spin" />
-                    <p className="text-sm text-[#6b7280]">Analyzing <span className="text-[#f9fafb] font-medium">{filename}</span>…</p>
+                    <Loader2 className="w-8 h-8 text-[#0891b2] animate-spin" />
+                    <p className="text-sm text-[#7d84a3]">Analyzing <span className="text-[#f4f5fc] font-medium">{filename}</span>…</p>
                   </>
                 ) : (
                   <>
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${dragging ? "bg-[#2563eb]/20" : "bg-[#1f2937]"}`}>
-                      <UploadCloud className={`w-6 h-6 ${dragging ? "text-[#2563eb]" : "text-[#6b7280]"}`} />
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${dragging ? "bg-[#0891b2]/20" : "bg-[#1a1c2e]"}`}>
+                      <UploadCloud className={`w-6 h-6 ${dragging ? "text-[#0891b2]" : "text-[#7d84a3]"}`} />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-medium text-[#f9fafb]">
+                      <p className="text-sm font-medium text-[#f4f5fc]">
                         {dragging ? "Drop to analyze" : "Drop a file here"}
                       </p>
-                      <p className="text-xs text-[#6b7280] mt-1">
-                        or <span className="text-[#60a5fa] underline underline-offset-2">click to browse</span> — auto-detects language, runs analysis instantly
+                      <p className="text-xs text-[#7d84a3] mt-1">
+                        or <span className="text-[#22d3ee] underline underline-offset-2">click to browse</span> — auto-detects language, runs analysis instantly
                       </p>
                     </div>
                     <div className="flex flex-wrap justify-center gap-1.5 max-w-md">
                       {["py", "ts", "js", "go", "rs", "java", "cs", "cpp", "rb", "sql"].map((ext) => (
-                        <span key={ext} className="text-[10px] px-1.5 py-0.5 rounded bg-[#1f2937] border border-[#374151] text-[#6b7280] font-mono">.{ext}</span>
+                        <span key={ext} className="text-[10px] px-1.5 py-0.5 rounded bg-[#1a1c2e] border border-[#262a3d] text-[#7d84a3] font-mono">.{ext}</span>
                       ))}
                     </div>
                   </>
@@ -306,23 +306,23 @@ export default function AnalyzePage() {
           <motion.div key="findings" {...slideIn(1)}>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-2xl font-bold text-[#f9fafb] mb-1">Review Findings</h1>
+                <h1 className="text-2xl font-bold font-display tracking-tight text-[#f4f5fc] mb-1">Review Findings</h1>
                 <div className="flex items-center gap-2 text-sm">
                   {secCount > 0 && <span className="text-red-400">{secCount} security issue{secCount !== 1 ? "s" : ""}</span>}
-                  {secCount > 0 && styCount > 0 && <span className="text-[#6b7280]">·</span>}
+                  {secCount > 0 && styCount > 0 && <span className="text-[#7d84a3]">·</span>}
                   {styCount > 0 && <span className="text-yellow-400">{styCount} style issue{styCount !== 1 ? "s" : ""}</span>}
                   {findings.length === 0 && <span className="text-green-400">No issues found</span>}
                 </div>
               </div>
               <button
                 onClick={() => goTo("input")}
-                className="flex items-center gap-1.5 text-sm text-[#6b7280] hover:text-[#f9fafb] transition-colors"
+                className="flex items-center gap-1.5 text-sm text-[#7d84a3] hover:text-[#f4f5fc] transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" /> Edit code
               </button>
             </div>
 
-            <div className="bg-[#111827] border border-[#374151] rounded-xl p-6 mb-4">
+            <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-6 mb-4">
               <FindingsList findings={findings} onApplyFix={handleApplyFix} />
             </div>
 
@@ -331,7 +331,7 @@ export default function AnalyzePage() {
                 <button
                   onClick={handleSeeDiff}
                   disabled={diffLoading}
-                  className="flex items-center gap-2 border border-[#374151] hover:border-[#6b7280] text-[#9ca3af] hover:text-[#f9fafb] disabled:opacity-50 font-medium px-5 py-2.5 rounded-xl text-sm transition-colors"
+                  className="flex items-center gap-2 border border-[#262a3d] hover:border-[#7d84a3] text-[#a8adc9] hover:text-[#f4f5fc] disabled:opacity-50 font-medium px-5 py-2.5 rounded-xl text-sm transition-colors"
                 >
                   {diffLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitCompare className="w-4 h-4" />}
                   {diffLoading ? "Building diff…" : "See Full Diff"}
@@ -339,7 +339,7 @@ export default function AnalyzePage() {
                 <button
                   onClick={handleApplyAll}
                   disabled={diffLoading}
-                  className="flex items-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-colors"
+                  className="flex items-center gap-2 bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-colors"
                 >
                   <Wand2 className="w-4 h-4" />
                   Apply all fixes
@@ -354,19 +354,19 @@ export default function AnalyzePage() {
           <motion.div key="diff" {...slideIn(1)}>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-2xl font-bold text-[#f9fafb] mb-1">Before / After</h1>
-                <p className="text-[#6b7280] text-sm">Original code on the left — suggested fixes applied on the right.</p>
+                <h1 className="text-2xl font-bold font-display tracking-tight text-[#f4f5fc] mb-1">Before / After</h1>
+                <p className="text-[#7d84a3] text-sm">Original code on the left — suggested fixes applied on the right.</p>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => goTo("findings")}
-                  className="flex items-center gap-1.5 text-sm text-[#6b7280] hover:text-[#f9fafb] border border-[#374151] px-3 py-1.5 rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 text-sm text-[#7d84a3] hover:text-[#f4f5fc] border border-[#262a3d] px-3 py-1.5 rounded-lg transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" /> Back to findings
                 </button>
                 <button
                   onClick={reset}
-                  className="flex items-center gap-1.5 text-sm text-[#6b7280] hover:text-[#f9fafb] border border-[#374151] px-3 py-1.5 rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 text-sm text-[#7d84a3] hover:text-[#f4f5fc] border border-[#262a3d] px-3 py-1.5 rounded-lg transition-colors"
                 >
                   <RotateCcw className="w-4 h-4" /> Start over
                 </button>

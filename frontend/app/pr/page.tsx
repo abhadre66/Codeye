@@ -18,7 +18,7 @@ import dynamic from "next/dynamic";
 
 const DiffEditor = dynamic(
   () => import("@monaco-editor/react").then((m) => m.DiffEditor),
-  { ssr: false, loading: () => <div className="h-[500px] bg-[#0a0a0a] rounded-lg animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-[500px] bg-[#08080f] rounded-lg animate-pulse" /> }
 );
 
 interface PRCoords { owner: string; repo: string; pr_number: number }
@@ -145,8 +145,8 @@ export default function PRPage() {
   return (
     <div className="px-4 sm:px-8 py-6 sm:py-8 max-w-5xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#f9fafb] mb-1">PR Review</h1>
-        <p className="text-[#6b7280] text-sm">Analyze a GitHub PR, apply fixes, and post a review.</p>
+        <h1 className="text-2xl font-bold font-display tracking-tight text-[#f4f5fc] mb-1">PR Review</h1>
+        <p className="text-[#7d84a3] text-sm">Analyze a GitHub PR, apply fixes, and post a review.</p>
       </div>
 
       {stage !== "input" && (
@@ -189,34 +189,34 @@ export default function PRPage() {
                 { label: "Deletions", value: `-${result?.deletions ?? 0}`, color: "text-red-400" },
                 { label: "Issues found", value: allFindings.length, color: allFindings.length > 0 ? "text-orange-400" : "text-green-400" },
               ].map((s) => (
-                <div key={s.label} className="bg-[#111827] border border-[#374151] rounded-xl p-4 text-center">
-                  <p className={`text-2xl font-bold ${s.color ?? "text-[#f9fafb]"}`}>{s.value}</p>
-                  <p className="text-xs text-[#6b7280] mt-1">{s.label}</p>
+                <div key={s.label} className="bg-[#12131f] border border-[#262a3d] rounded-xl p-4 text-center">
+                  <p className={`text-2xl font-bold ${s.color ?? "text-[#f4f5fc]"}`}>{s.value}</p>
+                  <p className="text-xs text-[#7d84a3] mt-1">{s.label}</p>
                 </div>
               ))}
             </div>
 
             {/* Summary */}
             {result?.summary && (
-              <div className="bg-[#111827] border border-[#374151] rounded-xl p-5 mb-5">
+              <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-5 mb-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <GitPullRequest className="w-4 h-4 text-[#a855f7]" />
-                  <h3 className="font-semibold text-[#f9fafb]">PR #{coords?.pr_number} — {coords?.owner}/{coords?.repo}</h3>
+                  <GitPullRequest className="w-4 h-4 text-[#818cf8]" />
+                  <h3 className="font-semibold text-[#f4f5fc]">PR #{coords?.pr_number} — {coords?.owner}/{coords?.repo}</h3>
                 </div>
-                <p className="text-sm text-[#d1d5db] leading-relaxed whitespace-pre-wrap">{result.summary}</p>
+                <p className="text-sm text-[#c7cbe3] leading-relaxed whitespace-pre-wrap">{result.summary}</p>
               </div>
             )}
 
             {/* Reviewers */}
             {reviewers && reviewers.length > 0 && (
-              <div className="bg-[#111827] border border-[#374151] rounded-xl p-5 mb-5">
+              <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-5 mb-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <Users className="w-4 h-4 text-[#60a5fa]" />
-                  <h3 className="font-semibold text-[#f9fafb]">Suggested Reviewers</h3>
+                  <Users className="w-4 h-4 text-[#22d3ee]" />
+                  <h3 className="font-semibold text-[#f4f5fc]">Suggested Reviewers</h3>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {reviewers.map(r => (
-                    <span key={r.login} className="text-xs px-2.5 py-1 bg-[#1f2937] border border-[#374151] rounded-full text-[#d1d5db]">
+                    <span key={r.login} className="text-xs px-2.5 py-1 bg-[#1a1c2e] border border-[#262a3d] rounded-full text-[#c7cbe3]">
                       @{r.login}
                     </span>
                   ))}
@@ -230,19 +230,19 @@ export default function PRPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-[#f97316]" />
-                    <span className="text-sm font-medium text-[#f9fafb]">{findings.length} issue{findings.length !== 1 ? "s" : ""} found</span>
+                    <span className="text-sm font-medium text-[#f4f5fc]">{findings.length} issue{findings.length !== 1 ? "s" : ""} found</span>
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     <button
                       onClick={goToDiff}
-                      className="flex items-center gap-1.5 text-sm text-[#9ca3af] border border-[#374151] hover:border-[#6b7280] px-3 py-1.5 rounded-lg transition-all"
+                      className="flex items-center gap-1.5 text-sm text-[#a8adc9] border border-[#262a3d] hover:border-[#7d84a3] px-3 py-1.5 rounded-lg transition-all"
                     >
                       <GitCompare className="w-3.5 h-3.5" /> See Diff
                     </button>
                     {fixableCount > 0 && (
                       <button
                         onClick={handleApplyAll}
-                        className="flex items-center gap-1.5 text-sm font-medium text-white bg-[#2563eb] hover:bg-[#1d4ed8] px-3 py-1.5 rounded-lg transition-all"
+                        className="flex items-center gap-1.5 text-sm font-medium text-white bg-[#0891b2] hover:bg-[#0e7490] px-3 py-1.5 rounded-lg transition-all"
                       >
                         <Wand2 className="w-3.5 h-3.5" /> Apply all fixes ({fixableCount})
                       </button>
@@ -252,19 +252,19 @@ export default function PRPage() {
                 <FindingsList findings={findings} onApplyFix={handleApplyFix} applyFixLabel="Apply fix" />
               </div>
             ) : (
-              <div className="bg-[#111827] border border-[#374151] rounded-xl p-8 text-center">
-                <p className="text-[#f9fafb] font-medium mb-1">No issues remaining</p>
-                <p className="text-sm text-[#6b7280]">All fixes applied — ready to post review.</p>
+              <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-8 text-center">
+                <p className="text-[#f4f5fc] font-medium mb-1">No issues remaining</p>
+                <p className="text-sm text-[#7d84a3]">All fixes applied — ready to post review.</p>
               </div>
             )}
 
             <div className="flex justify-between mt-6">
-              <button onClick={() => setStage("input")} className="flex items-center gap-2 text-sm text-[#6b7280] hover:text-[#f9fafb] transition-colors">
+              <button onClick={() => setStage("input")} className="flex items-center gap-2 text-sm text-[#7d84a3] hover:text-[#f4f5fc] transition-colors">
                 <ChevronLeft className="w-4 h-4" /> Back
               </button>
               <button
                 onClick={goToDiff}
-                className="flex items-center gap-2 text-sm font-medium text-white bg-[#2563eb] hover:bg-[#1d4ed8] px-4 py-2 rounded-lg transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-white bg-[#0891b2] hover:bg-[#0e7490] px-4 py-2 rounded-lg transition-colors"
               >
                 <GitCompare className="w-4 h-4" /> See Diff & Post Review
               </button>
@@ -283,7 +283,7 @@ export default function PRPage() {
                   <button
                     key={f.filename}
                     onClick={() => { setSelectedFile(f); setFixedContent(applyFixes(f.after, appliedFindings)); }}
-                    className={`text-xs font-mono px-3 py-1.5 rounded-lg border transition-all ${selectedFile?.filename === f.filename ? "bg-[#2563eb] border-[#2563eb] text-white" : "border-[#374151] text-[#9ca3af] hover:border-[#6b7280]"}`}
+                    className={`text-xs font-mono px-3 py-1.5 rounded-lg border transition-all ${selectedFile?.filename === f.filename ? "bg-[#0891b2] border-[#0891b2] text-white" : "border-[#262a3d] text-[#a8adc9] hover:border-[#7d84a3]"}`}
                   >
                     {f.filename}
                   </button>
@@ -293,13 +293,13 @@ export default function PRPage() {
 
             {/* Diff editor */}
             {selectedFile ? (
-              <div className="rounded-xl overflow-hidden border border-[#374151]">
-                <div className="flex items-center justify-between px-4 py-2 bg-[#111827] border-b border-[#374151]">
-                  <span className="text-xs font-mono text-[#9ca3af]">{selectedFile.filename}</span>
+              <div className="rounded-xl overflow-hidden border border-[#262a3d]">
+                <div className="flex items-center justify-between px-4 py-2 bg-[#12131f] border-b border-[#262a3d]">
+                  <span className="text-xs font-mono text-[#a8adc9]">{selectedFile.filename}</span>
                   <div className="flex gap-3 text-xs">
                     <span className="text-green-400">+{selectedFile.additions}</span>
                     <span className="text-red-400">-{selectedFile.deletions}</span>
-                    {appliedFindings.length > 0 && <span className="text-[#60a5fa]">{appliedFindings.length} fix{appliedFindings.length !== 1 ? "es" : ""} applied</span>}
+                    {appliedFindings.length > 0 && <span className="text-[#22d3ee]">{appliedFindings.length} fix{appliedFindings.length !== 1 ? "es" : ""} applied</span>}
                   </div>
                 </div>
                 <DiffEditor
@@ -311,25 +311,25 @@ export default function PRPage() {
                 />
               </div>
             ) : (
-              <div className="bg-[#111827] border border-[#374151] rounded-xl p-8 text-center">
-                <p className="text-sm text-[#6b7280]">No file content available for this PR.</p>
+              <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-8 text-center">
+                <p className="text-sm text-[#7d84a3]">No file content available for this PR.</p>
               </div>
             )}
 
             {/* Post Review */}
-            <div className="bg-[#111827] border border-[#374151] rounded-xl p-6 space-y-4">
+            <div className="bg-[#12131f] border border-[#262a3d] rounded-xl p-6 space-y-4">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#60a5fa]" />
-                <h3 className="font-semibold text-[#f9fafb]">Post review to GitHub</h3>
+                <FileText className="w-4 h-4 text-[#22d3ee]" />
+                <h3 className="font-semibold text-[#f4f5fc]">Post review to GitHub</h3>
               </div>
               <div>
-                <label className="text-xs font-medium text-[#9ca3af] block mb-2">Review type</label>
+                <label className="text-xs font-medium text-[#a8adc9] block mb-2">Review type</label>
                 <div className="flex gap-2">
                   {(["COMMENT", "APPROVE", "REQUEST_CHANGES"] as const).map((e) => (
                     <button
                       key={e}
                       onClick={() => setReviewEvent(e)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${reviewEvent === e ? "bg-[#2563eb] border-[#2563eb] text-white" : "border-[#374151] text-[#9ca3af] hover:border-[#6b7280]"}`}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${reviewEvent === e ? "bg-[#0891b2] border-[#0891b2] text-white" : "border-[#262a3d] text-[#a8adc9] hover:border-[#7d84a3]"}`}
                     >
                       {e.replace("_", " ")}
                     </button>
@@ -337,23 +337,23 @@ export default function PRPage() {
                 </div>
               </div>
               <div>
-                <label className="text-xs font-medium text-[#9ca3af] block mb-2">Review body</label>
+                <label className="text-xs font-medium text-[#a8adc9] block mb-2">Review body</label>
                 <textarea
                   value={reviewBody}
                   onChange={(e) => setReviewBody(e.target.value)}
                   rows={6}
                   placeholder="Write your review comments in Markdown… (applied fixes are added automatically)"
-                  className="w-full bg-[#1f2937] border border-[#374151] rounded-lg px-3 py-2.5 text-sm text-[#f9fafb] placeholder:text-[#6b7280] focus:outline-none focus:border-[#2563eb] resize-none"
+                  className="w-full bg-[#1a1c2e] border border-[#262a3d] rounded-lg px-3 py-2.5 text-sm text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#0891b2] resize-none"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <button onClick={() => setStage("findings")} className="flex items-center gap-2 text-sm text-[#6b7280] hover:text-[#f9fafb] transition-colors">
+                <button onClick={() => setStage("findings")} className="flex items-center gap-2 text-sm text-[#7d84a3] hover:text-[#f4f5fc] transition-colors">
                   <ChevronLeft className="w-4 h-4" /> Back to findings
                 </button>
                 <button
                   onClick={handlePostReview}
                   disabled={posting || !reviewBody.trim()}
-                  className="flex items-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
+                  className="flex items-center gap-2 bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors"
                 >
                   {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   {user ? "Post Review" : "Sign in & Post"}

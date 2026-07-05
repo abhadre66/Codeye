@@ -16,10 +16,10 @@ export function CodeDiff({ original, modified, filename = "snippet.py", complexi
   const additions = (modified.split("\n").length - original.split("\n").length);
 
   return (
-    <div className="bg-[#1e1e1e] rounded-xl overflow-hidden border border-[#374151]">
+    <div className="bg-[#1e1e1e] rounded-xl overflow-hidden border border-[#262a3d]">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-[#374151]">
-        <span className="text-xs text-[#9ca3af] font-mono">{filename} — diff</span>
+      <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-[#262a3d]">
+        <span className="text-xs text-[#a8adc9] font-mono">{filename} — diff</span>
         <div className="flex items-center gap-3">
           {additions !== 0 && (
             <span className={cn("text-xs font-mono", additions > 0 ? "text-green-400" : "text-red-400")}>
@@ -33,7 +33,7 @@ export function CodeDiff({ original, modified, filename = "snippet.py", complexi
             </span>
           )}
           {complexityDelta === 0 && (
-            <span className="inline-flex items-center gap-1 text-xs text-[#6b7280] border border-[#374151] px-2 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-xs text-[#7d84a3] border border-[#262a3d] px-2 py-0.5 rounded-md">
               <Minus className="w-3 h-3" /> no complexity change
             </span>
           )}
@@ -63,7 +63,7 @@ export function CodeDiff({ original, modified, filename = "snippet.py", complexi
         }}
         loading={
           <div className="flex items-center justify-center bg-[#1e1e1e]" style={{ height }}>
-            <span className="text-xs text-[#6b7280]">Loading diff editor…</span>
+            <span className="text-xs text-[#7d84a3]">Loading diff editor…</span>
           </div>
         }
       />

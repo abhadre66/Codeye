@@ -23,12 +23,12 @@ export function MessageBubble({ message, isLast }: Props) {
       className={cn("flex gap-3 max-w-4xl", isUser ? "ml-auto flex-row-reverse" : "")}
     >
       {/* Avatar */}
-      <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5", isUser ? "bg-[#2563eb]" : "bg-[#1f2937] border border-[#374151]")}>
-        {isUser ? <User className="w-3.5 h-3.5 text-white" /> : <Bot className="w-3.5 h-3.5 text-[#9ca3af]" />}
+      <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5", isUser ? "bg-[#0891b2]" : "bg-[#1a1c2e] border border-[#262a3d]")}>
+        {isUser ? <User className="w-3.5 h-3.5 text-white" /> : <Bot className="w-3.5 h-3.5 text-[#a8adc9]" />}
       </div>
 
       {/* Content */}
-      <div className={cn("rounded-xl px-4 py-3 max-w-[85%] text-sm leading-relaxed", isUser ? "bg-[#2563eb] text-white rounded-tr-sm" : "bg-[#1f2937] border border-[#374151] text-[#d1d5db] rounded-tl-sm")}>
+      <div className={cn("rounded-xl px-4 py-3 max-w-[85%] text-sm leading-relaxed", isUser ? "bg-[#0891b2] text-white rounded-tr-sm" : "bg-[#1a1c2e] border border-[#262a3d] text-[#c7cbe3] rounded-tl-sm")}>
         {isUser ? (
           <p className="whitespace-pre-wrap">{message.content}</p>
         ) : (
@@ -43,15 +43,15 @@ export function MessageBubble({ message, isLast }: Props) {
                     <code>{children}</code>
                   </pre>
                 ) : (
-                  <code className="bg-black/30 px-1 py-0.5 rounded text-xs font-mono text-[#93c5fd]">{children}</code>
+                  <code className="bg-black/30 px-1 py-0.5 rounded text-xs font-mono text-[#67e8f9]">{children}</code>
                 );
               },
               ul: ({ children }) => <ul className="list-disc list-inside space-y-1 my-2">{children}</ul>,
               ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 my-2">{children}</ol>,
-              h3: ({ children }) => <h3 className="font-semibold text-[#f9fafb] mt-3 mb-1">{children}</h3>,
-              h4: ({ children }) => <h4 className="font-medium text-[#f9fafb] mt-2 mb-1">{children}</h4>,
-              strong: ({ children }) => <strong className="font-semibold text-[#f9fafb]">{children}</strong>,
-              a: ({ children, href }) => <a href={href} target="_blank" rel="noreferrer" className="text-[#60a5fa] hover:underline">{children}</a>,
+              h3: ({ children }) => <h3 className="font-semibold text-[#f4f5fc] mt-3 mb-1">{children}</h3>,
+              h4: ({ children }) => <h4 className="font-medium text-[#f4f5fc] mt-2 mb-1">{children}</h4>,
+              strong: ({ children }) => <strong className="font-semibold text-[#f4f5fc]">{children}</strong>,
+              a: ({ children, href }) => <a href={href} target="_blank" rel="noreferrer" className="text-[#22d3ee] hover:underline">{children}</a>,
             }}
           >
             {message.content || (isLast ? "▋" : "")}

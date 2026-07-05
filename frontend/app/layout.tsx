@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/layout/AppShell";
 import { Toaster } from "@/components/ui/sonner";
@@ -16,6 +16,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "ReviewMind — AI-Native Code Review",
   description: "AI-powered PR review with security analysis, style checking, and smart reviewer suggestions.",
@@ -25,8 +31,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable} dark h-full`}>
-      <body className="h-full bg-[#0a0a0a] text-[#f9fafb] antialiased flex">
+    <html lang="en" className={`${inter.variable} ${geistMono.variable} ${spaceGrotesk.variable} dark h-full`}>
+      <body className="h-full bg-[#08080f] text-[#f4f5fc] antialiased flex">
         <AuthGate>
           <AppShell>{children}</AppShell>
         </AuthGate>

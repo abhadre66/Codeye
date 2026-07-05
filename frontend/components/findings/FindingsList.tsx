@@ -49,8 +49,8 @@ export function FindingsList({ findings, title, onApplyFix, applyFixLabel }: Pro
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <CheckCircle2 className="w-12 h-12 text-green-500 mb-4 opacity-80" />
-        <p className="text-lg font-semibold text-[#f9fafb] mb-1">No issues found</p>
-        <p className="text-sm text-[#6b7280]">Your code looks clean. Nice work.</p>
+        <p className="text-lg font-semibold text-[#f4f5fc] mb-1">No issues found</p>
+        <p className="text-sm text-[#7d84a3]">Your code looks clean. Nice work.</p>
       </div>
     );
   }
@@ -59,8 +59,8 @@ export function FindingsList({ findings, title, onApplyFix, applyFixLabel }: Pro
     <div className="space-y-4">
       {title && (
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-[#f9fafb]">{title}</h3>
-          <button onClick={exportJSON} className="flex items-center gap-1.5 text-xs text-[#6b7280] hover:text-[#f9fafb] transition-colors px-2 py-1.5 rounded-md border border-[#374151] hover:border-[#6b7280]">
+          <h3 className="font-semibold text-[#f4f5fc]">{title}</h3>
+          <button onClick={exportJSON} className="flex items-center gap-1.5 text-xs text-[#7d84a3] hover:text-[#f4f5fc] transition-colors px-2 py-1.5 rounded-md border border-[#262a3d] hover:border-[#7d84a3]">
             <Download className="w-3 h-3" />
             Export JSON
           </button>
@@ -70,17 +70,17 @@ export function FindingsList({ findings, title, onApplyFix, applyFixLabel }: Pro
       {/* Filters */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#6b7280]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#7d84a3]" />
           <input
             type="text"
             placeholder="Search by rule, message, or file..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 text-sm bg-[#1f2937] border border-[#374151] rounded-lg text-[#f9fafb] placeholder:text-[#6b7280] focus:outline-none focus:border-[#2563eb]"
+            className="w-full pl-8 pr-3 py-1.5 text-sm bg-[#1a1c2e] border border-[#262a3d] rounded-lg text-[#f4f5fc] placeholder:text-[#7d84a3] focus:outline-none focus:border-[#0891b2]"
           />
         </div>
         <div className="flex items-center gap-1.5 flex-wrap">
-          <Filter className="w-3.5 h-3.5 text-[#6b7280]" />
+          <Filter className="w-3.5 h-3.5 text-[#7d84a3]" />
           {SEVERITIES.map((s) => {
             const count = severityCount(s);
             if (count === 0) return null;
@@ -100,7 +100,7 @@ export function FindingsList({ findings, title, onApplyFix, applyFixLabel }: Pro
       </div>
 
       {/* Results count */}
-      <p className="text-xs text-[#6b7280]">
+      <p className="text-xs text-[#7d84a3]">
         Showing {filtered.length} of {findings.length} finding{findings.length !== 1 ? "s" : ""}
       </p>
 
@@ -110,7 +110,7 @@ export function FindingsList({ findings, title, onApplyFix, applyFixLabel }: Pro
           <FindingCard key={`${f.rule_id}-${i}`} finding={f} index={i} onApplyFix={onApplyFix} applyFixLabel={applyFixLabel} />
         ))}
         {filtered.length === 0 && (
-          <p className="text-sm text-[#6b7280] py-4 text-center">No findings match your filters.</p>
+          <p className="text-sm text-[#7d84a3] py-4 text-center">No findings match your filters.</p>
         )}
       </div>
     </div>

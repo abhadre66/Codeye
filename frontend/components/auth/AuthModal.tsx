@@ -36,13 +36,13 @@ export function AuthModal({ open, onClose, onSuccess }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-[#111827] border-[#374151] text-[#f9fafb] max-w-sm">
+      <DialogContent className="bg-[#12131f] border-[#262a3d] text-[#f4f5fc] max-w-sm">
         <DialogHeader>
-          <div className="w-10 h-10 rounded-xl bg-[#2563eb]/20 border border-[#2563eb]/30 flex items-center justify-center mb-3">
-            <GitBranch className="w-5 h-5 text-[#2563eb]" />
+          <div className="w-10 h-10 rounded-xl bg-[#0891b2]/20 border border-[#0891b2]/30 flex items-center justify-center mb-3">
+            <GitBranch className="w-5 h-5 text-[#0891b2]" />
           </div>
-          <DialogTitle className="text-[#f9fafb]">Sign in to ReviewMind</DialogTitle>
-          <DialogDescription className="text-[#6b7280]">
+          <DialogTitle className="text-[#f4f5fc]">Sign in to ReviewMind</DialogTitle>
+          <DialogDescription className="text-[#7d84a3]">
             Connect an account to post reviews and analyze your PRs.
           </DialogDescription>
         </DialogHeader>
@@ -50,7 +50,7 @@ export function AuthModal({ open, onClose, onSuccess }: Props) {
           <button
             onClick={() => handleSignIn("github")}
             disabled={loading !== null}
-            className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 text-white font-medium py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
           >
             {loading === "github" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitBranch className="w-4 h-4" />}
             {loading === "github" ? "Redirecting…" : "Continue with GitHub"}
@@ -58,7 +58,7 @@ export function AuthModal({ open, onClose, onSuccess }: Props) {
           <button
             onClick={() => handleSignIn("google")}
             disabled={loading !== null}
-            className="w-full bg-white hover:bg-gray-100 disabled:opacity-50 text-[#1f2937] font-medium py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-white hover:bg-gray-100 disabled:opacity-50 text-[#1a1c2e] font-medium py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
           >
             {loading === "google" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon className="w-4 h-4" />}
             {loading === "google" ? "Redirecting…" : "Continue with Google"}

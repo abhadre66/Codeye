@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  MessageSquare,
   Code2,
   GitPullRequest,
   Zap,
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/lib/hooks/useUser";
+import { Logo } from "@/components/layout/Logo";
 
 const nav = [
   { label: "System", items: [] },
@@ -50,20 +50,18 @@ export function Sidebar({ open = false, onClose }: Props) {
 
       <aside
         className={cn(
-          "fixed top-0 left-0 bottom-0 w-60 bg-[#111827] border-r border-[#374151] flex flex-col z-40",
+          "fixed top-0 left-0 bottom-0 w-60 bg-[#12131f] border-r border-[#262a3d] flex flex-col z-40",
           "transition-transform duration-200 md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Logo */}
-        <div className="px-5 py-5 border-b border-[#374151]">
+        <div className="px-5 py-5 border-b border-[#262a3d]">
           <Link href="/" onClick={onClose} className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-lg bg-[#2563eb] flex items-center justify-center flex-shrink-0">
-              <MessageSquare className="w-4 h-4 text-white" />
-            </div>
+            <Logo size={28} className="flex-shrink-0" />
             <div>
-              <p className="text-sm font-bold text-[#f9fafb] leading-none">ReviewMind</p>
-              <p className="text-[10px] text-[#6b7280] mt-0.5">AI Code Review</p>
+              <p className="text-sm font-bold text-[#f4f5fc] leading-none font-display tracking-tight">ReviewMind</p>
+              <p className="text-[10px] text-[#7d84a3] mt-0.5">AI Code Review</p>
             </div>
           </Link>
         </div>
@@ -73,7 +71,7 @@ export function Sidebar({ open = false, onClose }: Props) {
           {nav.map((item, i) => {
             if ("items" in item) {
               return (
-                <p key={i} className="px-2 py-2 text-[10px] font-semibold tracking-widest text-[#6b7280] uppercase mt-2 first:mt-0">
+                <p key={i} className="px-2 py-2 text-[10px] font-semibold tracking-widest text-[#7d84a3] uppercase mt-2 first:mt-0">
                   {item.label}
                 </p>
               );
@@ -88,11 +86,11 @@ export function Sidebar({ open = false, onClose }: Props) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 mb-0.5",
                   active
-                    ? "bg-[#2563eb]/15 text-[#f9fafb] font-medium"
-                    : "text-[#9ca3af] hover:text-[#f9fafb] hover:bg-[#1f2937]"
+                    ? "bg-[#0891b2]/15 text-[#f4f5fc] font-medium"
+                    : "text-[#a8adc9] hover:text-[#f4f5fc] hover:bg-[#1a1c2e]"
                 )}
               >
-                <Icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-[#2563eb]" : "")} />
+                <Icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-[#0891b2]" : "")} />
                 {item.label}
               </Link>
             );
@@ -100,9 +98,9 @@ export function Sidebar({ open = false, onClose }: Props) {
         </nav>
 
       {/* User / Auth */}
-      <div className="px-4 py-3 border-t border-[#374151]">
+      <div className="px-4 py-3 border-t border-[#262a3d]">
         {loading ? (
-          <div className="flex items-center gap-2 text-[#6b7280]">
+          <div className="flex items-center gap-2 text-[#7d84a3]">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span className="text-xs">Loading…</span>
           </div>
@@ -111,17 +109,17 @@ export function Sidebar({ open = false, onClose }: Props) {
             {avatarUrl ? (
               <img src={avatarUrl} alt={githubUsername} className="w-7 h-7 rounded-full flex-shrink-0" />
             ) : (
-              <div className="w-7 h-7 rounded-full bg-[#374151] flex items-center justify-center flex-shrink-0">
-                <GitBranch className="w-4 h-4 text-[#9ca3af]" />
+              <div className="w-7 h-7 rounded-full bg-[#262a3d] flex items-center justify-center flex-shrink-0">
+                <GitBranch className="w-4 h-4 text-[#a8adc9]" />
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-[#f9fafb] truncate">{githubUsername ?? "GitHub User"}</p>
-              <p className="text-[10px] text-[#6b7280]">Connected</p>
+              <p className="text-xs font-medium text-[#f4f5fc] truncate">{githubUsername ?? "GitHub User"}</p>
+              <p className="text-[10px] text-[#7d84a3]">Connected</p>
             </div>
             <button
               onClick={() => signOut()}
-              className="text-[#6b7280] hover:text-[#f9fafb] transition-colors"
+              className="text-[#7d84a3] hover:text-[#f4f5fc] transition-colors"
               title="Sign out"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -130,7 +128,7 @@ export function Sidebar({ open = false, onClose }: Props) {
         ) : (
           <button
             onClick={() => signInWithGitHub()}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-[#f9fafb] hover:bg-[#1f2937] transition-all"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#a8adc9] hover:text-[#f4f5fc] hover:bg-[#1a1c2e] transition-all"
           >
             <GitBranch className="w-4 h-4 flex-shrink-0" />
             Sign in with GitHub

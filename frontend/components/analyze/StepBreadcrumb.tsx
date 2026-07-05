@@ -24,16 +24,16 @@ export function StepBreadcrumb({ steps, current, onStepClick }: Props) {
               disabled={!done}
               className={cn(
                 "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-                active && "text-[#f9fafb] bg-[#2563eb]/15 border border-[#2563eb]/40",
-                done && "text-[#60a5fa] hover:text-[#93c5fd] cursor-pointer",
-                future && "text-[#4b5563] cursor-default"
+                active && "text-[#f4f5fc] bg-[#0891b2]/15 border border-[#0891b2]/40",
+                done && "text-[#22d3ee] hover:text-[#67e8f9] cursor-pointer",
+                future && "text-[#363a52] cursor-default"
               )}
             >
               <span className={cn(
                 "w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border",
-                active && "bg-[#2563eb] border-[#2563eb] text-white",
-                done && "bg-[#1d4ed8]/30 border-[#2563eb]/60 text-[#60a5fa]",
-                future && "bg-[#1f2937] border-[#374151] text-[#4b5563]"
+                active && "bg-[#0891b2] border-[#0891b2] text-white",
+                done && "bg-[#0e7490]/30 border-[#0891b2]/60 text-[#22d3ee]",
+                future && "bg-[#1a1c2e] border-[#262a3d] text-[#363a52]"
               )}>
                 {done ? <Check className="w-3 h-3" /> : i + 1}
               </span>
@@ -41,7 +41,7 @@ export function StepBreadcrumb({ steps, current, onStepClick }: Props) {
             </button>
 
             {i < steps.length - 1 && (
-              <div className={cn("w-8 h-px mx-1", done || active ? "bg-[#2563eb]/40" : "bg-[#374151]")} />
+              <div className={cn("w-8 h-px mx-1", done || active ? "bg-[#0891b2]/40" : "bg-[#262a3d]")} />
             )}
           </div>
         );

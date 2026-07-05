@@ -51,11 +51,11 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center h-full text-center py-20"
           >
-            <div className="w-12 h-12 rounded-2xl bg-[#2563eb]/20 border border-[#2563eb]/30 flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-[#2563eb]" />
+            <div className="w-12 h-12 rounded-2xl bg-[#0891b2]/20 border border-[#0891b2]/30 flex items-center justify-center mb-4">
+              <Zap className="w-6 h-6 text-[#0891b2]" />
             </div>
-            <h2 className="text-xl font-bold text-[#f9fafb] mb-2">Start a review</h2>
-            <p className="text-[#6b7280] text-sm max-w-md mb-6">
+            <h2 className="text-xl font-bold text-[#f4f5fc] mb-2">Start a review</h2>
+            <p className="text-[#7d84a3] text-sm max-w-md mb-6">
               Ask me to review a PR, analyze pasted code, find security issues, or suggest reviewers.
             </p>
             <div className="grid grid-cols-1 gap-2 w-full max-w-md">
@@ -68,7 +68,7 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
                 <button
                   key={s}
                   onClick={() => setInput(s)}
-                  className="text-left px-4 py-2.5 rounded-lg bg-[#111827] border border-[#374151] text-sm text-[#9ca3af] hover:text-[#f9fafb] hover:border-[#6b7280] transition-all"
+                  className="text-left px-4 py-2.5 rounded-lg bg-[#12131f] border border-[#262a3d] text-sm text-[#a8adc9] hover:text-[#f4f5fc] hover:border-[#7d84a3] transition-all"
                 >
                   {s}
                 </button>
@@ -87,19 +87,19 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1f2937] border border-[#374151] w-fit"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1a1c2e] border border-[#262a3d] w-fit"
                 >
-                  <Wrench className="w-3.5 h-3.5 text-[#2563eb]" />
-                  <span className="text-xs text-[#9ca3af]">
+                  <Wrench className="w-3.5 h-3.5 text-[#0891b2]" />
+                  <span className="text-xs text-[#a8adc9]">
                     {activeTool.status === "running" ? `Calling` : `Done`}:{" "}
-                    <span className="text-[#60a5fa] font-mono">{activeTool.name}</span>
+                    <span className="text-[#22d3ee] font-mono">{activeTool.name}</span>
                   </span>
                   {activeTool.status === "running" && (
                     <span className="flex gap-0.5">
                       {[0, 1, 2].map((i) => (
                         <motion.span
                           key={i}
-                          className="w-1 h-1 rounded-full bg-[#2563eb]"
+                          className="w-1 h-1 rounded-full bg-[#0891b2]"
                           animate={{ opacity: [0.3, 1, 0.3] }}
                           transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
                         />
@@ -115,10 +115,10 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
       </div>
 
       {/* Input */}
-      <div className="border-t border-[#374151] px-4 py-4 bg-[#0a0a0a]">
+      <div className="border-t border-[#262a3d] px-4 py-4 bg-[#08080f]">
         {!isEmpty && (
           <div className="flex justify-end mb-2">
-            <button onClick={clear} className="flex items-center gap-1.5 text-xs text-[#6b7280] hover:text-[#9ca3af] transition-colors">
+            <button onClick={clear} className="flex items-center gap-1.5 text-xs text-[#7d84a3] hover:text-[#a8adc9] transition-colors">
               <Trash2 className="w-3 h-3" /> Clear
             </button>
           </div>
@@ -132,9 +132,9 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
             placeholder="Ask ReviewMind anything… (⌘+Enter to send)"
             rows={1}
             className={cn(
-              "flex-1 resize-none bg-[#111827] border border-[#374151] rounded-xl px-4 py-3",
-              "text-sm text-[#f9fafb] placeholder:text-[#6b7280]",
-              "focus:outline-none focus:border-[#2563eb] transition-colors",
+              "flex-1 resize-none bg-[#12131f] border border-[#262a3d] rounded-xl px-4 py-3",
+              "text-sm text-[#f4f5fc] placeholder:text-[#7d84a3]",
+              "focus:outline-none focus:border-[#0891b2] transition-colors",
               "max-h-40 overflow-y-auto scrollbar-thin"
             )}
             style={{ height: "auto", minHeight: "48px" }}
@@ -151,14 +151,14 @@ export function ChatPanel({ initialCode, initialPr }: Props) {
             className={cn(
               "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
               input.trim() && !isStreaming
-                ? "bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                : "bg-[#1f2937] text-[#6b7280] cursor-not-allowed"
+                ? "bg-[#0891b2] hover:bg-[#0e7490] text-white"
+                : "bg-[#1a1c2e] text-[#7d84a3] cursor-not-allowed"
             )}
           >
             {isStreaming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           </button>
         </div>
-        <p className="text-[10px] text-[#6b7280] mt-2 text-right">⌘+Enter to send</p>
+        <p className="text-[10px] text-[#7d84a3] mt-2 text-right">⌘+Enter to send</p>
       </div>
     </div>
   );

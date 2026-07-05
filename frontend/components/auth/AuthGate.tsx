@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, GitBranch, MessageSquare } from "lucide-react";
+import { Loader2, GitBranch } from "lucide-react";
 import { useUser } from "@/lib/hooks/useUser";
+import { Logo } from "@/components/layout/Logo";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -21,8 +22,8 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="h-full w-full flex items-center justify-center bg-[#0a0a0a]">
-        <Loader2 className="w-6 h-6 text-[#6b7280] animate-spin" />
+      <div className="h-full w-full flex items-center justify-center bg-[#08080f]">
+        <Loader2 className="w-6 h-6 text-[#7d84a3] animate-spin" />
       </div>
     );
   }
@@ -35,23 +36,21 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     };
 
     return (
-      <div className="h-full w-full flex items-center justify-center bg-[#0a0a0a] px-4">
+      <div className="relative h-full w-full flex items-center justify-center bg-[#08080f] px-4 overflow-hidden ambient-glow">
         <div className="w-full max-w-sm">
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="w-12 h-12 rounded-xl bg-[#2563eb] flex items-center justify-center mb-4">
-              <MessageSquare className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-xl font-bold text-[#f9fafb]">ReviewMind</h1>
-            <p className="text-sm text-[#6b7280] mt-1.5">
+            <Logo size={56} className="mb-5 drop-shadow-[0_0_24px_rgba(34,211,238,0.35)]" />
+            <h1 className="text-2xl font-bold font-display tracking-tight gradient-text">ReviewMind</h1>
+            <p className="text-sm text-[#7d84a3] mt-2">
               Sign in to analyze PRs, review code, and get AI-powered fixes.
             </p>
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-2.5 bg-[#12131f]/80 border border-[#262a3d] rounded-2xl p-5 backdrop-blur-sm">
             <button
               onClick={() => handleSignIn("github")}
               disabled={signingIn !== null}
-              className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 text-white font-medium py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-[#0891b2] hover:bg-[#0e7490] disabled:opacity-50 text-white font-medium py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
             >
               {signingIn === "github" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitBranch className="w-4 h-4" />}
               {signingIn === "github" ? "Redirecting…" : "Continue with GitHub"}
@@ -59,14 +58,14 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => handleSignIn("google")}
               disabled={signingIn !== null}
-              className="w-full bg-white hover:bg-gray-100 disabled:opacity-50 text-[#1f2937] font-medium py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-white hover:bg-gray-100 disabled:opacity-50 text-[#1a1c2e] font-medium py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
             >
               {signingIn === "google" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon className="w-4 h-4" />}
               {signingIn === "google" ? "Redirecting…" : "Continue with Google"}
             </button>
           </div>
 
-          <p className="text-center text-[10px] text-[#4b5563] mt-6">
+          <p className="text-center text-[10px] text-[#363a52] mt-6">
             By continuing you agree to connect your account for PR analysis and review posting.
           </p>
         </div>
