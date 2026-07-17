@@ -320,7 +320,7 @@ async def pr_files_content(
 ) -> dict:
     analysis_svc, _, _ = _make_services(github_token)
     pr = await analysis_svc._repo.get_pr(owner, repo, pr_number)
-    files = await analysis_svc._repo.get_pr_files(owner, repo, pr_number)
+    files = await analysis_svc._repo.get_pr_files(owner, repo, pr_number, pr.head_sha)
 
     file_contents = []
     for f in files[:5]:  # limit to 5 files
@@ -354,8 +354,9 @@ async def pr_diff(
     github_token: str = Depends(get_github_token),
 ) -> dict:
     analysis_svc, _, _ = _make_services(github_token)
-    raw_diff = await analysis_svc._repo.get_pr_diff(owner, repo, pr_number)
-    files = await analysis_svc._repo.get_pr_files(owner, repo, pr_number)
+    pr = await analysis_svc._repo.get_pr(owner, repo, pr_number)
+    raw_diff = await analysis_svc._repo.get_pr_diff(owner, repo, pr_number, pr.head_sha)
+    files = await analysis_svc._repo.get_pr_files(owner, repo, pr_number, pr.head_sha)
     return {
         "ok": True,
         "raw_diff": raw_diff,

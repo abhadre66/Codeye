@@ -48,15 +48,16 @@ class PRAnalysisService:
     async def get_chunks(
         self, owner: str, repo: str, pr_number: int
     ) -> list[SemanticChunk]:
-        """Parse and classify the PR diff into SemanticChunks. Result is cached."""
-        key = pr_key(owner, repo, pr_number, "chunks")
+        """Parse and classify the PR diff into SemanticChunks. Result is cached
+        per head commit, so pushing new commits re-analyzes immediately."""
+        pr = await self._repo.get_pr(owner, repo, pr_number)
+        key = pr_key(owner, repo, pr_number, f"chunks:{pr.head_sha}")
         cached = await get_json(key)
         if cached is not None:
             logger.info("pr_analysis_chunks_cache_hit", pr=pr_number)
             return _deserialize_chunks(cached)
 
-        pr = await self._repo.get_pr(owner, repo, pr_number)
-        raw_diff = await self._repo.get_pr_diff(owner, repo, pr_number)
+        raw_diff = await self._repo.get_pr_diff(owner, repo, pr_number, pr.head_sha)
 
         async def fetch_content(filename: str) -> str:
             return await self._repo.get_file_content(owner, repo, filename, pr.head_sha)

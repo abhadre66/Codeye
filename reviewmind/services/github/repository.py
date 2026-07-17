@@ -173,8 +173,13 @@ class GitHubRepository:
 
     # ── Raw diff ─────────────────────────────────────────────────────────────
 
-    async def get_pr_diff(self, owner: str, repo: str, number: int) -> str:
-        cache_key = pr_key(owner, repo, number, "diff")
+    async def get_pr_diff(
+        self, owner: str, repo: str, number: int, head_sha: str | None = None
+    ) -> str:
+        # Keying by head_sha means a new push invalidates the cache instantly
+        # instead of serving a stale diff for up to TTL_DIFF_OPEN.
+        suffix = f"diff:{head_sha}" if head_sha else "diff"
+        cache_key = pr_key(owner, repo, number, suffix)
 
         async def fetch() -> str:
             resp = await get_with_retry(
@@ -191,9 +196,10 @@ class GitHubRepository:
     # ── Changed files ─────────────────────────────────────────────────────────
 
     async def get_pr_files(
-        self, owner: str, repo: str, number: int
+        self, owner: str, repo: str, number: int, head_sha: str | None = None
     ) -> list[PRFile]:
-        cache_key = pr_key(owner, repo, number, "files")
+        suffix = f"files:{head_sha}" if head_sha else "files"
+        cache_key = pr_key(owner, repo, number, suffix)
 
         async def fetch() -> list[dict]:
             items = []

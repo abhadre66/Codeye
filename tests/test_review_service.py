@@ -28,6 +28,7 @@ def mock_repo():
     repo.get_pr_reviews = AsyncMock(return_value=[_make_review()])
     repo.get_pr_review_comments = AsyncMock(return_value=[_make_comment()])
     repo.post_review = AsyncMock(return_value={"id": 9001, "html_url": "https://github.com/x/pull/1/reviews/9001"})
+    repo.get_pr = AsyncMock(return_value=MagicMock(head_sha="abc123"))
     # Diff where src/auth.py has RIGHT-side lines 9-11 (line 10 is added)
     repo.get_pr_files = AsyncMock(return_value=[
         PRFile(

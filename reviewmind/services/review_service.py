@@ -180,7 +180,8 @@ class ReviewService:
         # over a single unresolvable line, so demote those to the summary.
         if inline:
             try:
-                files = await self._repo.get_pr_files(owner, repo, pr_number)
+                pr = await self._repo.get_pr(owner, repo, pr_number)
+                files = await self._repo.get_pr_files(owner, repo, pr_number, pr.head_sha)
                 valid = {f.filename: _right_side_lines(f.patch) for f in files}
                 still_inline: list[dict] = []
                 for c in inline:
