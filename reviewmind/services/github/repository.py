@@ -110,6 +110,30 @@ class ReviewComment:
     created_at: str
 
 
+@dataclass
+class RepoSummary:
+    owner: str
+    name: str
+    full_name: str
+    private: bool
+    description: str
+    default_branch: str
+    pushed_at: str
+    open_issues: int
+
+
+@dataclass
+class PRListItem:
+    number: int
+    title: str
+    author: str
+    head_branch: str
+    base_branch: str
+    updated_at: str
+    draft: bool
+    url: str
+
+
 # ── Repository service ────────────────────────────────────────────────────────
 
 class GitHubRepository:
@@ -282,6 +306,48 @@ class GitHubRepository:
         logger.info("github_related_prs", owner=owner, repo=repo, cache_hit=hit)
         return [_dict_to_pr_summary(d, owner, repo) for d in (raw or [])]
 
+    # ── Browse: user repos & open PRs ─────────────────────────────────────────
+
+    async def list_user_repos(
+        self, *, per_page: int = 100, page: int = 1
+    ) -> list[RepoSummary]:
+        """Repos the token's user owns, collaborates on, or gets via an org.
+
+        Deliberately uncached: results are token-scoped, and the shared
+        repo_key-style cache keys would leak one user's private repo list
+        to another.
+        """
+        resp = await get_with_retry(
+            self._client,
+            "/user/repos",
+            params={
+                "sort": "pushed",
+                "per_page": per_page,
+                "page": page,
+                "affiliation": "owner,collaborator,organization_member",
+            },
+        )
+        raw = resp.body if isinstance(resp.body, list) else []
+        return [_dict_to_repo_summary(d) for d in raw]
+
+    async def list_open_prs(
+        self, owner: str, repo: str, *, per_page: int = 50
+    ) -> list[PRListItem]:
+        """Open PRs for a repo, most recently updated first. Uncached: may be
+        private data, and users expect a fresh list when picking a PR."""
+        resp = await get_with_retry(
+            self._client,
+            f"/repos/{owner}/{repo}/pulls",
+            params={
+                "state": "open",
+                "sort": "updated",
+                "direction": "desc",
+                "per_page": per_page,
+            },
+        )
+        raw = resp.body if isinstance(resp.body, list) else []
+        return [_dict_to_pr_list_item(d) for d in raw]
+
     # ── Linked issues ─────────────────────────────────────────────────────────
 
     async def get_linked_issues(
@@ -416,6 +482,32 @@ def _dict_to_pr_summary(data: dict, owner: str, repo: str) -> PRSummary:
         url=data["html_url"],
         owner=owner,
         repo=repo,
+    )
+
+
+def _dict_to_repo_summary(data: dict) -> RepoSummary:
+    return RepoSummary(
+        owner=data["owner"]["login"],
+        name=data["name"],
+        full_name=data["full_name"],
+        private=data.get("private", False),
+        description=data.get("description") or "",
+        default_branch=data.get("default_branch", "main"),
+        pushed_at=data.get("pushed_at") or "",
+        open_issues=data.get("open_issues_count", 0),
+    )
+
+
+def _dict_to_pr_list_item(data: dict) -> PRListItem:
+    return PRListItem(
+        number=data["number"],
+        title=data["title"],
+        author=data["user"]["login"],
+        head_branch=data["head"]["ref"],
+        base_branch=data["base"]["ref"],
+        updated_at=data.get("updated_at") or "",
+        draft=data.get("draft", False),
+        url=data["html_url"],
     )
 
 

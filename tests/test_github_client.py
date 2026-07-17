@@ -12,6 +12,7 @@ import pytest
 import respx
 
 from reviewmind.services.github.client import (
+    ForbiddenError,
     GitHubClient,
     GitHubError,
     NotFoundError,
@@ -101,9 +102,29 @@ async def test_get_raises_not_found(client):
 async def test_get_raises_rate_limit_on_403(client):
     with respx.mock:
         respx.get("https://api.github.com/repos/acme/app/pulls/1").mock(
-            return_value=httpx.Response(403, json={"message": "rate limit exceeded"})
+            return_value=httpx.Response(
+                403,
+                json={"message": "rate limit exceeded"},
+                headers={"x-ratelimit-remaining": "0"},
+            )
         )
         with pytest.raises(RateLimitError):
+            await client.get("/repos/acme/app/pulls/1")
+
+
+@pytest.mark.asyncio
+async def test_get_raises_forbidden_on_403_with_quota_left(client):
+    """A 403 that is NOT rate limiting (e.g. missing OAuth scope) must raise
+    ForbiddenError so it isn't retried or misreported as a rate limit."""
+    with respx.mock:
+        respx.get("https://api.github.com/repos/acme/app/pulls/1").mock(
+            return_value=httpx.Response(
+                403,
+                json={"message": "Resource not accessible by personal access token"},
+                headers=RATE_HEADERS,
+            )
+        )
+        with pytest.raises(ForbiddenError):
             await client.get("/repos/acme/app/pulls/1")
 
 

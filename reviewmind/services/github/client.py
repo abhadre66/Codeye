@@ -70,6 +70,23 @@ class NotFoundError(GitHubError):
     pass
 
 
+class ForbiddenError(GitHubError):
+    """403 that is NOT rate limiting — missing OAuth scope or repo permission."""
+    pass
+
+
+def _raise_for_403(response: httpx.Response) -> None:
+    """GitHub uses 403 for both rate limiting and permission denials.
+    Only the former has X-RateLimit-Remaining exhausted."""
+    if response.headers.get("x-ratelimit-remaining") == "0":
+        raise RateLimitError(403, "Rate limit exceeded")
+    try:
+        msg = response.json().get("message", response.text)
+    except ValueError:
+        msg = response.text
+    raise ForbiddenError(403, msg)
+
+
 # ── Client ────────────────────────────────────────────────────────────────────
 
 class GitHubClient:
@@ -127,8 +144,11 @@ class GitHubClient:
         if response.status_code == 404:
             raise NotFoundError(404, f"{path} not found")
 
-        if response.status_code in (403, 429):
-            raise RateLimitError(response.status_code, "Rate limit exceeded")
+        if response.status_code == 429:
+            raise RateLimitError(429, "Rate limit exceeded")
+
+        if response.status_code == 403:
+            _raise_for_403(response)
 
         if response.status_code >= 400:
             msg = response.json().get("message", response.text)
@@ -149,8 +169,11 @@ class GitHubClient:
         response = await self._http.post(path, json=json)
         rate_limit = RateLimit.from_headers(response.headers)
 
-        if response.status_code in (403, 429):
-            raise RateLimitError(response.status_code, "Rate limit exceeded")
+        if response.status_code == 429:
+            raise RateLimitError(429, "Rate limit exceeded")
+
+        if response.status_code == 403:
+            _raise_for_403(response)
 
         if response.status_code >= 400:
             msg = response.json().get("message", response.text)

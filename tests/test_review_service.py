@@ -142,4 +142,26 @@ async def test_post_review_passes_inline_comments(svc, mock_repo):
         confirmed=True,
     )
     call_kwargs = mock_repo.post_review.call_args[1]
-    assert call_kwargs["comments"] == comments
+    # Comments are normalized to GitHub's modern review-comment shape
+    assert call_kwargs["comments"] == [
+        {"path": "src/auth.py", "body": "Add validation", "line": 10, "side": "RIGHT"}
+    ]
+
+
+@pytest.mark.asyncio
+async def test_post_review_folds_unanchored_comments_into_body(svc, mock_repo):
+    comments = [
+        {"path": "src/auth.py", "line": 10, "body": "Add validation"},
+        {"path": "src/db.py", "body": "No line for this one"},
+    ]
+    await svc.post_review(
+        "acme", "app", 1,
+        body="Review body",
+        event="COMMENT",
+        comments=comments,
+        confirmed=True,
+    )
+    call_kwargs = mock_repo.post_review.call_args[1]
+    assert len(call_kwargs["comments"]) == 1
+    assert "Other findings" in call_kwargs["body"]
+    assert "No line for this one" in call_kwargs["body"]

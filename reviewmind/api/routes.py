@@ -283,6 +283,31 @@ async def fix(
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# GitHub browse (requires GitHub token)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.get("/github/repos")
+async def github_repos(
+    page: int = Query(1, ge=1),
+    github_token: str = Depends(get_github_token),
+) -> dict:
+    analysis_svc, _, _ = _make_services(github_token)
+    repos = await analysis_svc._repo.list_user_repos(page=page)
+    return {"ok": True, "repos": [_asdict(r) for r in repos]}
+
+
+@router.get("/github/repos/{owner}/{repo}/pulls")
+async def github_repo_pulls(
+    owner: str,
+    repo: str,
+    github_token: str = Depends(get_github_token),
+) -> dict:
+    analysis_svc, _, _ = _make_services(github_token)
+    pulls = await analysis_svc._repo.list_open_prs(owner, repo)
+    return {"ok": True, "pulls": [_asdict(p) for p in pulls]}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # PR Analysis (requires GitHub token)
 # ─────────────────────────────────────────────────────────────────────────────
 

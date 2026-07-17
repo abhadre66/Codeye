@@ -76,7 +76,14 @@ export function useUser() {
   const signInWithGitHub = () =>
     supabase.auth.signInWithOAuth({
       provider: "github",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        // "repo" grants read/write on public + private repos (classic OAuth
+        // app model — all-or-nothing); "read:org" lets /user/repos include
+        // org repositories. Without these the provider_token is read-only
+        // and posting reviews/approvals fails.
+        scopes: "repo read:org",
+      },
     });
 
   const signInWithGoogle = () =>

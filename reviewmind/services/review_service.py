@@ -51,6 +51,40 @@ class ReviewHistory:
     inline_comments: list[ReviewComment]
 
 
+def _split_comments(comments: list[dict] | None) -> tuple[list[dict], list[dict]]:
+    """Normalize comments to GitHub's modern review-comment shape
+    ({path, body, line, side}); comments without a usable path+line can't be
+    anchored inline and are returned separately to be folded into the body."""
+    inline: list[dict] = []
+    unanchored: list[dict] = []
+    for c in comments or []:
+        path = c.get("path")
+        body = (c.get("body") or "").strip()
+        line = c.get("line")
+        if not body:
+            continue
+        if path and line:
+            inline.append({
+                "path": path,
+                "body": body,
+                "line": int(line),
+                "side": c.get("side", "RIGHT"),
+            })
+        else:
+            unanchored.append({"path": path or "", "body": body})
+    return inline, unanchored
+
+
+def _fold_into_body(body: str, unanchored: list[dict]) -> str:
+    if not unanchored:
+        return body
+    lines = [body, "", "### Other findings"]
+    for c in unanchored:
+        prefix = f"`{c['path']}`: " if c["path"] else ""
+        lines.append(f"- {prefix}{c['body']}")
+    return "\n".join(lines)
+
+
 class ReviewService:
 
     def __init__(self, repo: GitHubRepository) -> None:
@@ -116,20 +150,23 @@ class ReviewService:
         if not body.strip():
             raise ValueError("body must not be empty")
 
+        inline, unanchored = _split_comments(comments)
+        full_body = _fold_into_body(body, unanchored)
+
         if not confirmed:
             return {
                 "preview": True,
-                "body": body,
+                "body": full_body,
                 "event": event,
-                "comments": comments or [],
+                "comments": inline,
                 "warning": "Set confirmed=true to actually post this review to GitHub.",
             }
 
         result = await self._repo.post_review(
             owner, repo, pr_number,
-            body=body,
+            body=full_body,
             event=event,
-            comments=comments,
+            comments=inline,
         )
         logger.info("review_posted", pr=pr_number, review_event=event, id=result.get("id"))
         return result

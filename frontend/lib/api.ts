@@ -7,11 +7,22 @@ async function getToken(): Promise<string | null> {
   return data.session?.access_token ?? null;
 }
 
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.status = status;
+    this.code = code;
+  }
+}
+
 async function req<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, options);
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(err.detail || `HTTP ${res.status}`);
+    throw new ApiError(err.detail || `HTTP ${res.status}`, res.status, err.code);
   }
   return res.json();
 }
@@ -44,6 +55,44 @@ export const compare = (before: string, after: string, filename = "snippet.py") 
 
 export const suggestFixes = (code: string, filename = "snippet.py", source: "paste" | "upload" = "paste") =>
   post<{ ok: boolean; result: unknown }>("/fix", { code, filename, source }, true);
+
+// ── GitHub browse ─────────────────────────────────────────────────────────────
+export interface RepoSummary {
+  owner: string;
+  name: string;
+  full_name: string;
+  private: boolean;
+  description: string;
+  default_branch: string;
+  pushed_at: string;
+  open_issues: number;
+}
+
+export interface PRListItem {
+  number: number;
+  title: string;
+  author: string;
+  head_branch: string;
+  base_branch: string;
+  updated_at: string;
+  draft: boolean;
+  url: string;
+}
+
+export const listRepos = async (page = 1) => {
+  const token = await getToken();
+  return req<{ ok: boolean; repos: RepoSummary[] }>(`/github/repos?page=${page}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+};
+
+export const listOpenPRs = async (owner: string, repo: string) => {
+  const token = await getToken();
+  return req<{ ok: boolean; pulls: PRListItem[] }>(
+    `/github/repos/${owner}/${repo}/pulls`,
+    { headers: token ? { Authorization: `Bearer ${token}` } : {} },
+  );
+};
 
 // ── PR ────────────────────────────────────────────────────────────────────────
 export const analyzePR = (owner: string, repo: string, pr_number: number) =>
