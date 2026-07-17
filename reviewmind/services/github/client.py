@@ -75,6 +75,21 @@ class ForbiddenError(GitHubError):
     pass
 
 
+def _error_detail(response: httpx.Response) -> str:
+    """GitHub hides the useful part of 422s in an `errors` array next to a
+    generic message — include both."""
+    try:
+        data = response.json()
+    except ValueError:
+        return response.text
+    msg = data.get("message", response.text)
+    errors = data.get("errors")
+    if errors:
+        details = "; ".join(e if isinstance(e, str) else str(e) for e in errors)
+        return f"{msg} — {details}"
+    return msg
+
+
 def _raise_for_403(response: httpx.Response) -> None:
     """GitHub uses 403 for both rate limiting and permission denials.
     Only the former has X-RateLimit-Remaining exhausted."""
@@ -176,8 +191,7 @@ class GitHubClient:
             _raise_for_403(response)
 
         if response.status_code >= 400:
-            msg = response.json().get("message", response.text)
-            raise GitHubError(response.status_code, msg)
+            raise GitHubError(response.status_code, _error_detail(response))
 
         return GitHubResponse(
             body=response.json(),

@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from reviewmind.services.github.repository import ReviewComment, ReviewSummary
+from reviewmind.services.github.repository import PRFile, ReviewComment, ReviewSummary
 from reviewmind.services.review_service import ReviewHistory, ReviewService
 
 
@@ -28,6 +28,16 @@ def mock_repo():
     repo.get_pr_reviews = AsyncMock(return_value=[_make_review()])
     repo.get_pr_review_comments = AsyncMock(return_value=[_make_comment()])
     repo.post_review = AsyncMock(return_value={"id": 9001, "html_url": "https://github.com/x/pull/1/reviews/9001"})
+    # Diff where src/auth.py has RIGHT-side lines 9-11 (line 10 is added)
+    repo.get_pr_files = AsyncMock(return_value=[
+        PRFile(
+            filename="src/auth.py",
+            status="modified",
+            additions=1,
+            deletions=0,
+            patch="@@ -9,2 +9,3 @@\n context\n+added line\n context",
+        )
+    ])
     return repo
 
 
@@ -146,6 +156,28 @@ async def test_post_review_passes_inline_comments(svc, mock_repo):
     assert call_kwargs["comments"] == [
         {"path": "src/auth.py", "body": "Add validation", "line": 10, "side": "RIGHT"}
     ]
+
+
+@pytest.mark.asyncio
+async def test_post_review_demotes_lines_outside_diff(svc, mock_repo):
+    """A comment on a line GitHub can't resolve must be folded into the body,
+    not sent inline (GitHub rejects the whole review otherwise)."""
+    comments = [
+        {"path": "src/auth.py", "line": 10, "body": "In the diff"},
+        {"path": "src/auth.py", "line": 999, "body": "Outside the diff"},
+        {"path": "not_in_pr.py", "line": 1, "body": "File not in PR"},
+    ]
+    await svc.post_review(
+        "acme", "app", 1,
+        body="Review body",
+        event="COMMENT",
+        comments=comments,
+        confirmed=True,
+    )
+    call_kwargs = mock_repo.post_review.call_args[1]
+    assert [c["line"] for c in call_kwargs["comments"]] == [10]
+    assert "Outside the diff" in call_kwargs["body"]
+    assert "File not in PR" in call_kwargs["body"]
 
 
 @pytest.mark.asyncio

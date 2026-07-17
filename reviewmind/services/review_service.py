@@ -9,6 +9,7 @@ the user to confirm before mutating external state.
 from __future__ import annotations
 
 import asyncio
+import re
 from dataclasses import dataclass
 
 from reviewmind.core.logging import get_logger
@@ -73,6 +74,28 @@ def _split_comments(comments: list[dict] | None) -> tuple[list[dict], list[dict]
         else:
             unanchored.append({"path": path or "", "body": body})
     return inline, unanchored
+
+
+_HUNK_HEADER = re.compile(r"^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@")
+
+
+def _right_side_lines(patch: str) -> set[int]:
+    """New-file line numbers that appear in a unified diff patch (added and
+    context lines) — the only RIGHT-side lines GitHub accepts review comments
+    on. GitHub rejects the entire review if any comment line isn't in the diff."""
+    lines: set[int] = set()
+    new_lineno = 0
+    for raw in patch.splitlines():
+        m = _HUNK_HEADER.match(raw)
+        if m:
+            new_lineno = int(m.group(1))
+            continue
+        if raw.startswith("-"):
+            continue
+        if raw.startswith(("+", " ")) or raw == "":
+            lines.add(new_lineno)
+            new_lineno += 1
+    return lines
 
 
 def _fold_into_body(body: str, unanchored: list[dict]) -> str:
@@ -151,6 +174,24 @@ class ReviewService:
             raise ValueError("body must not be empty")
 
         inline, unanchored = _split_comments(comments)
+
+        # Findings sometimes point at lines outside the PR's diff hunks
+        # (e.g. a function's first line). GitHub rejects the whole review
+        # over a single unresolvable line, so demote those to the summary.
+        if inline:
+            try:
+                files = await self._repo.get_pr_files(owner, repo, pr_number)
+                valid = {f.filename: _right_side_lines(f.patch) for f in files}
+                still_inline: list[dict] = []
+                for c in inline:
+                    if c["line"] in valid.get(c["path"], set()):
+                        still_inline.append(c)
+                    else:
+                        unanchored.append({"path": c["path"], "body": c["body"]})
+                inline = still_inline
+            except Exception as exc:
+                logger.warning("comment_line_validation_skipped", error=str(exc))
+
         full_body = _fold_into_body(body, unanchored)
 
         if not confirmed:

@@ -77,7 +77,7 @@ async def github_error_handler(request: Request, exc: GitHubError):
     logger.warning("github_error", path=str(request.url.path), error=str(exc))
     if exc.status_code == 422:
         msg = str(exc)
-        if "must be part of the diff" in msg:
+        if "must be part of the diff" in msg or "could not be resolved" in msg.lower():
             return _github_error_response(
                 422,
                 "comment_line_not_in_diff",
