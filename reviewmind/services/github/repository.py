@@ -247,12 +247,13 @@ class GitHubRepository:
             f"/repos/{owner}/{repo}/pulls/{number}/reviews",
             json=payload,
         )
+        # structlog reserves "event" for the log message itself
         logger.info(
             "github_review_posted",
             owner=owner,
             repo=repo,
             pr=number,
-            event=event,
+            review_event=event,
             review_id=resp.body.get("id"),
         )
         return resp.body
